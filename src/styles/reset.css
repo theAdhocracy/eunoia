@@ -1,0 +1,226 @@
+/* A11y/fix: set base font size (based on user preferences) */
+:root {
+	font-size: 100%;
+}
+
+/* A11y: motion sensitivity */
+@media screen and (prefers-reduced-motion: reduce), (update: slow) {
+	* {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+	}
+
+	html {
+		scroll-behavior: auto !important;
+	}
+}
+
+/* General: scroll behaviour */
+@media screen and (prefers-reduced-motion: no-preference) {
+	html {
+		interpolate-size: allow-keywords;
+		scroll-behavior: smooth;
+	}
+}
+
+/* General: reset box-model */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+/* Fix: prevent font size inflation */
+html {
+	-moz-text-size-adjust: none;
+	-webkit-text-size-adjust: none;
+	text-size-adjust: none;
+}
+
+/* Fix: set full height body */
+html,
+body {
+	min-block-size: 100dvh;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+}
+
+main {
+	flex-grow: 1;
+}
+
+/* General: remove margins */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+dl,
+figure,
+blockquote,
+pre,
+fieldset,
+legend {
+	margin-block-start: 0;
+}
+
+/* General: improve readability */
+html {
+	word-break: break-word;
+	hanging-punctuation: first allow-end last;
+	font-size: clamp(
+		1rem,
+		1rem + 0.5vw,
+		2rem
+	); /* sets a fluid type that allows 200% zoom minimum */
+	font-family: system-ui, sans-serif;
+	font-family: var(--font-default);
+	line-height: 1.4;
+	tab-size: 2;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	text-wrap: balance;
+}
+
+h1,
+h2,
+h3,
+h4,
+button,
+input,
+label {
+	line-height: 1.1;
+}
+
+p,
+li,
+dl,
+address {
+	line-height: 1.5;
+}
+
+pre {
+	white-space: pre-wrap;
+}
+
+/* General: better defaults/overrides */
+ul,
+ol,
+dl {
+	list-style: inside;
+}
+
+ul[role="list"],
+ol[role="list"] {
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--gutter, 1em);
+	padding: 0;
+	margin: 0;
+}
+
+code,
+pre,
+kbd {
+	font-family: "Consolas", "Courier New", monospace;
+	font-family: var(--font-mono);
+}
+
+svg {
+	fill: currentColor;
+}
+
+dd {
+	margin: 0;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* General: forms */
+
+input,
+button,
+textarea,
+select {
+	font-family: inherit;
+	font-size: inherit;
+}
+
+label {
+	display: block;
+}
+
+input:not(
+		:where(
+				[type="submit"],
+				[type="checkbox"],
+				[type="radio"],
+				[type="button"],
+				[type="reset"]
+			)
+	) {
+	inline-size: 100%;
+}
+
+textarea {
+	field-sizing: content;
+	min-block-size: 6lh;
+	inline-size: 100%;
+	max-inline-size: 100%;
+}
+
+/* General: multimedia */
+img,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object,
+picture {
+	display: block;
+}
+
+img,
+video,
+picture {
+	block-size: auto;
+	max-inline-size: 100%;
+}
+
+/* A11y: ensure scroll margin */
+:target {
+	scroll-margin-block: 5ex;
+}
+
+/* A11y: general fixes */
+[aria-disabled="true"],
+[disabled] {
+	cursor: not-allowed;
+}
+
+[hidden] {
+	display: none !important;
+}
+
+:focus-visible {
+	outline-offset: 2px;
+}

@@ -1,86 +1,81 @@
 ---
-import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
+import type { CollectionEntry } from "astro:content";
+import Global from "./Global.astro";
+import Comment from "../components/Comment.astro";
+import { formatDate } from "../utilities/formatDate";
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<"blog">["data"] & {
+	comments: CollectionEntry<"comments">[];
+};
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, pubDate, updatedDate, author, comments } = Astro.props;
+
+// Configure dates
+const date = formatDate(updatedDate || pubDate);
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
+<Global title={title}>
+	<!-- TODO: Pagination -->
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
-				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html>
+	<!-- Article -->
+	<article class="blog" data-layout="content">
+		<header>
+			<h1>{title}</h1>
+			<p>by <span>{author}</span></p>
+			<p>published <time datetime={date.html}>{date.formatted}</time></p>
+		</header>
+		<slot />
+	</article>
+
+	<!-- Comments -->
+	{
+		comments.length > 0 && (
+			<section class="comments" data-layout="content">
+				<h2>Comments ({comments.length})</h2>
+				{comments.map((comment) => {
+					// Do not show empty comments
+					if (!comment.rendered) return null;
+
+					return <Comment {...comment.data} content={comment.rendered.html} />;
+				})}
+			</section>
+		)
+	}
+	<!-- TODO: Note - i am not replicating the actual comment submission form, because this is an archive -->
+</Global>
+
+<style is:global>
+	.blog {
+		header {
+			h1 {
+				margin-block-end: 0.25rem;
+				font-size: 1.25rem;
+				font-weight: 600;
+			}
+
+			p {
+				line-height: 1.2;
+				font-size: 0.825rem;
+				color: var(--colour-grey-dark);
+				text-wrap: balance;
+			}
+
+			p span {
+				color: var(--colour-highlight);
+			}
+		}
+	}
+
+	.comments {
+		margin-block-start: 3rem;
+
+		h2 {
+			font-size: 1.25rem;
+		}
+	}
+
+	.footnote {
+		font-size: 0.75rem;
+		color: var(--colour-grey-darker);
+	}
+</style>

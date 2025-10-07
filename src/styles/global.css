@@ -21,11 +21,16 @@
 
 	--border: 1px solid var(--colour-grey-light);
 	--border-form: 1px solid var(--colour-grey-mid);
+	--border-highlight: 1px solid var(--colour-blue-mid);
+	--colour-border: var(--colour-grey-light);
 
 	--colour-heading: var(--colour-black);
 	--colour-text: var(--colour-black);
 	--colour-text-inverse: var(--colour-white);
 	--colour-link: var(--colour-blue-mid);
+	--colour-highlight: var(--colour-blue-mid);
+
+	/* TODO: add a high contrast theme that fixes the various a11y issues with text colours (highlight, link) */
 }
 
 body {
@@ -44,4 +49,20 @@ h6 {
 
 a {
 	color: var(--colour-link);
+}
+
+/* Layout classes */
+
+[data-layout="content"] {
+	display: flex;
+	flex-direction: column;
+	gap: var(--content-gutter, 1.25em);
+
+	p,
+	li,
+	blockquote,
+	caption,
+	figcaption {
+		max-inline-size: 72ch;
+	}
 }

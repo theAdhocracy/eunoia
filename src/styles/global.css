@@ -18,7 +18,6 @@
 	--colour-black: #444444;
 
 	/* Utilities */
-
 	--border: 1px solid var(--colour-grey-light);
 	--border-form: 1px solid var(--colour-grey-mid);
 	--border-highlight: 1px solid var(--colour-blue-mid);
@@ -27,8 +26,10 @@
 	--colour-heading: var(--colour-black);
 	--colour-text: var(--colour-black);
 	--colour-text-inverse: var(--colour-white);
+	--colour-text-faded: var(--colour-grey-dark);
 	--colour-link: var(--colour-blue-mid);
 	--colour-highlight: var(--colour-blue-mid);
+	--colour-focus: var(--colour-orange);
 
 	/* TODO: add a high contrast theme that fixes the various a11y issues with text colours (highlight, link) */
 }

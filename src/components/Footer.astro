@@ -1,14 +1,15 @@
 ---
-const today = new Date();
+
 ---
 
 <footer>
-	<p>All rights reserved by eunoia studio interactive agency</p>
-	<nav>
+	<p>All rights reserved by eunoiastudio interactive agency</p>
+	<nav aria-label="Footer">
 		<ul role="list">
+			<!-- TODO: make this link to the right pages -->
 			<li><a href="/">Home</a></li>
-			<li><a href="/">Gallery</a></li>
-			<li><a href="/">Thoughts</a></li>
+			<li><a href="/">Portfolio</a></li>
+			<li><a href="/">Contact</a></li>
 			<li><a href="https://theadhocracy.co.uk">theAdhocracy</a></li>
 		</ul>
 	</nav>
@@ -16,8 +17,38 @@ const today = new Date();
 
 <style>
 	footer {
-		background-color: #ffffff;
-		color: #8a8888;
-		font-size: 0.875rem;
+		--border-width: 2px;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		padding: 0 1rem;
+		border-block-start: 2px solid var(--colour-border);
+		background-color: var(--colour-white);
+		font-size: 0.75rem;
+		font-family: var(--font-alt);
+		color: var(--colour-text-faded);
+
+		nav a,
+		p {
+			padding-block: 1rem;
+		}
+
+		nav {
+			letter-spacing: 0.05em;
+
+			a {
+				display: inline-block;
+				color: var(--colour-text-faded);
+				text-decoration: none;
+
+				&:hover,
+				&:focus {
+					color: var(--colour-focus);
+					border-block-start: 2px solid var(--colour-focus);
+					margin-block-start: -2px;
+					outline: none;
+				}
+			}
+		}
 	}
 </style>

@@ -38,5 +38,5 @@ const messages = [
 	// Randomise message
 	const announcement = document.querySelector(".announcements p");
 	const message = messages[Math.floor(Math.random() * messages.length)];
-	if (announcement) announcement.innerText = message;
+	if (announcement) announcement.innerHTML = message;
 </script>

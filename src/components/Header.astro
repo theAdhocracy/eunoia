@@ -1,5 +1,5 @@
 ---
-
+import Announcements from "./Announcements.astro";
 ---
 
 <header>
@@ -10,6 +10,7 @@
 			<li><a href="/photos">photo gallery</a></li>
 			<li><a href="/about">about us</a></li>
 			<li><a href="/thoughts">thoughts</a></li>
+			<li><a href="/thoughts">timeline</a></li>
 		</ul>
 		<div class="location">
 			<p>Location: Cumbria, United Kingdom</p>
@@ -21,7 +22,7 @@
 		</div>
 		<p class="callout">round the world</p>
 	</nav>
-	<!-- TODO: add news scroller -->
+	<Announcements />
 </header>
 
 <!-- TODO: move some of this style into global sheets, fix the existing styles (remove most), and use tokens -->
@@ -43,7 +44,7 @@
 		}
 
 		ul[role="list"] {
-			flex: 1 1 50%;
+			flex: 1 1 58%;
 
 			--gutter: 0.5rem 2rem;
 			padding: 1rem clamp(1.5rem, 5vw + 1rem, 5rem);
@@ -58,6 +59,22 @@
 			a {
 				place-self: center;
 				text-decoration: none;
+				font-weight: bold;
+			}
+
+			a:hover,
+			a:focus {
+				color: var(--colour-focus);
+				outline-color: var(--colour-focus);
+			}
+
+			a:focus-visible {
+				--border-offest: 0.1rem;
+
+				outline: none;
+				margin-block: calc(var(--border-offest) * -1);
+				padding-block: var(--border-offest);
+				border-block: 2px solid var(--colour-focus);
 			}
 		}
 
@@ -71,6 +88,7 @@
 			background-color: var(--colour-grey-light);
 			font-size: 0.7rem;
 			font-style: italic;
+			padding-block: 0.25rem;
 			padding-inline: 2em;
 			text-align: center;
 			place-items: center;

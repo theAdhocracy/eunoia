@@ -1,0 +1,42 @@
+---
+// TODO: confirm page link below is correct
+const messages = [
+	"Welcome to the Eunoia Blog; if you have any ideas or suggestions please email us.",
+	"The navigation system is entering Beta stage with around 50% completion; please be patient.",
+	"Just completed the brand new Maintec website, check it out @ <a href='/portfolio#maintec'>MaintecSXM</a>",
+	"Want to know where we are? Well now we have the Locator online it's easy ‒ it should be updated at each new city/major stop.",
+	"<a href='/about'>About Us</a> is now live so head on over; we'd love some feedback!",
+];
+---
+
+<aside class="announcements">
+	<h2>Latest News:</h2>
+	<p>{messages[0]}</p>
+</aside>
+
+<style>
+	.announcements {
+		padding: 1rem 2rem;
+		background-color: var(--colour-grey-lighter);
+		border-block: var(--border);
+		text-align: center;
+		line-height: 1;
+
+		h2 {
+			min-inline-size: max-content;
+		}
+
+		h2,
+		p {
+			display: inline;
+			font-size: 0.75rem;
+		}
+	}
+</style>
+
+<script is:inline define:vars={{ messages }}>
+	// Randomise message
+	const announcement = document.querySelector(".announcements p");
+	const message = messages[Math.floor(Math.random() * messages.length)];
+	if (announcement) announcement.innerText = message;
+</script>

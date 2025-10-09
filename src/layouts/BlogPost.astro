@@ -2,20 +2,26 @@
 import type { CollectionEntry } from "astro:content";
 import Global from "./Global.astro";
 import Comment from "../components/Comment.astro";
+import Pagination from "../components/Pagination.astro";
 import { formatDate } from "../utilities/formatDate";
 
 type Props = CollectionEntry<"blog">["data"] & {
 	comments: CollectionEntry<"comments">[];
+	pagination: {
+		prev: { title: string; url: string };
+		next: { title: string; url: string };
+	};
 };
 
-const { title, pubDate, updatedDate, author, comments } = Astro.props;
+const { title, pubDate, updatedDate, author, comments, pagination } =
+	Astro.props;
 
 // Configure dates
 const date = formatDate(updatedDate || pubDate);
 ---
 
 <Global title={title}>
-	<!-- TODO: Pagination -->
+	<Pagination {...pagination} />
 
 	<!-- Article -->
 	<article class="blog" data-layout="content">

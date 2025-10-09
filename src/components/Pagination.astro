@@ -1,0 +1,48 @@
+---
+const { prev, next } = Astro.props;
+---
+
+<nav aria-label="Pagination">
+	{
+		prev.url && (
+			<a href={prev.url}>
+				<span aria-hidden>«</span> Previous: {prev.title}
+			</a>
+		)
+	}
+	{
+		next.url && (
+			<a href={next.url} class="next">
+				Next: {next.title} <span aria-hidden>»</span>
+			</a>
+		)
+	}
+</nav>
+
+<style>
+	nav {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-block-end: 2rem;
+		font-size: 0.875rem;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a span {
+		color: var(--colour-black);
+	}
+
+	a:hover,
+	a:focus {
+		color: var(--colour-focus);
+	}
+
+	.next {
+		margin-left: auto;
+	}
+</style>

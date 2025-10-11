@@ -1,19 +1,27 @@
 ---
+import Arrow from "../assets/ArrowIcon.svg";
+
 const { prev, next } = Astro.props;
 ---
 
 <nav aria-label="Pagination">
 	{
 		prev.url && (
-			<a href={prev.url}>
-				<span aria-hidden>«</span> Previous: {prev.title}
+			<a href={prev.url} class="prev">
+				<span aria-hidden>
+					<Arrow />
+				</span>{" "}
+				Previous: {prev.title}
 			</a>
 		)
 	}
 	{
 		next.url && (
 			<a href={next.url} class="next">
-				Next: {next.title} <span aria-hidden>»</span>
+				Next: {next.title}{" "}
+				<span aria-hidden>
+					<Arrow />
+				</span>
 			</a>
 		)
 	}
@@ -30,16 +38,25 @@ const { prev, next } = Astro.props;
 	}
 
 	a {
+		display: flex;
+		align-items: center;
 		text-decoration: none;
 	}
 
 	a span {
+		max-block-size: 1em;
+		margin-inline-end: 0.25rem;
+		margin-block-start: -0.1rem;
 		color: var(--colour-black);
 	}
 
 	a:hover,
 	a:focus {
 		color: var(--colour-focus);
+	}
+
+	.prev svg {
+		transform: rotate(180deg);
 	}
 
 	.next {

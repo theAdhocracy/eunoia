@@ -1,4 +1,4 @@
-export const formatDate = (date: Date) => {
+export const formatDate = (date: Date | string) => {
 	// HTML attribute
 	const html = new Intl.DateTimeFormat("sv-SE")
 		.format(new Date(date))

@@ -30,17 +30,25 @@ import Announcements from "./Announcements.astro";
 	header {
 		display: flex;
 		flex-direction: column;
-		background-color: #073950;
+		background-color: var(--colour-grey-lighter);
 
 		& > a:has(img) {
-			place-self: center;
+			width: 100%;
+			background-color: #073950;
+
+			img {
+				margin-inline: auto;
+			}
 		}
 
 		nav {
+			align-self: center;
+
 			display: flex;
 			flex-wrap: wrap;
 			min-height: 60px;
-			background-color: var(--colour-grey-lighter);
+			width: 100%;
+			max-width: var(--width-content);
 		}
 
 		ul[role="list"] {
@@ -48,7 +56,7 @@ import Announcements from "./Announcements.astro";
 
 			--gutter: 0.5rem 2rem;
 			padding: 1rem clamp(1.5rem, 5vw + 1rem, 5rem);
-
+			place-content: center;
 			font-size: 0.9rem;
 
 			li {

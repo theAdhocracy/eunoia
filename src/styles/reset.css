@@ -170,6 +170,10 @@ select {
 	font-size: inherit;
 }
 
+button {
+	cursor: pointer;
+}
+
 label {
 	display: block;
 }

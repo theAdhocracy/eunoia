@@ -3,7 +3,7 @@ import Announcements from "./Announcements.astro";
 ---
 
 <header>
-	<img src="/images/logo.jpg" alt="Beautiful thinking" />
+	<a href="/"><img src="/images/logo.jpg" alt="Beautiful thinking" /></a>
 	<nav>
 		<ul role="list">
 			<li><a href="/">home</a></li>
@@ -30,9 +30,9 @@ import Announcements from "./Announcements.astro";
 	header {
 		display: flex;
 		flex-direction: column;
-		background-color: var(--colour-blue-darker);
+		background-color: #073950;
 
-		& > img {
+		& > a:has(img) {
 			place-self: center;
 		}
 

@@ -3,6 +3,7 @@ import "../styles/reset.css";
 import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import Sidebar from "../components/Sidebar.astro";
 
 interface Props {
 	title: string;
@@ -46,9 +47,11 @@ const { title } = Astro.props;
 
 	<body>
 		<Header />
-		<main>
-			<slot />
-			<!-- TODO: add sidebar -->
+		<main data-layout="sidebar">
+			<div data-layout="content">
+				<slot />
+			</div>
+			<Sidebar />
 		</main>
 		<Footer />
 	</body>
@@ -56,8 +59,18 @@ const { title } = Astro.props;
 
 <style>
 	main {
-		max-width: 100%;
+		width: 100%;
+		max-width: var(--width-content);
 		margin: 0;
-		padding: clamp(0.5rem, 5vw + 1rem, 3rem);
+		align-self: center;
+		padding-block-start: clamp(0.5rem, 5vw + 1rem, 3rem);
+	}
+
+	@scope (main[data-layout="sidebar"]) {
+		--gutter: 0;
+	}
+
+	main > [data-layout="content"] {
+		padding-inline: clamp(0.5rem, 5vw + 1rem, 3rem);
 	}
 </style>

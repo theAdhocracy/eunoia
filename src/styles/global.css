@@ -62,6 +62,17 @@ a {
 	color: var(--colour-link);
 }
 
+input,
+textarea,
+select {
+	border: var(--border-form);
+	background-color: var(--colour-white);
+	padding-inline: 0.5em;
+	padding-block: 0.25em;
+	line-height: 1.5;
+	color: var(--colour-grey-dark);
+}
+
 /* Layout classes */
 
 [data-layout="content"] {

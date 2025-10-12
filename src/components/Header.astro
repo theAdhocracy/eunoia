@@ -1,8 +1,42 @@
 ---
 import Announcements from "./Announcements.astro";
+import Arrow from "../assets/ArrowIcon.svg";
+
+// Today's date in 2009 (for date picker default)
+const today = new Date().toISOString().slice(0, 10);
+const todayAgo = today.replace(
+	/^[0-9]{4}-(?<month>[0-9]{2})-(?<day>[0-9]{2}).*$/,
+	"2009-$<month>-$<day>"
+);
 ---
 
 <header>
+	<section class="account-settings">
+		<form>
+			<label for="date-picker">date</label>
+			<input
+				type="date"
+				id="date-picker"
+				name="date-picker"
+				value={todayAgo}
+				min="2009-01-01"
+				max="2009-12-31"
+			/>
+			<button type="submit">
+				<span class="sr-only">Set date</span><Arrow />
+			</button>
+		</form>
+		<form>
+			<label for="theme-picker">theme</label>
+			<select id="theme-picker" name="theme-picker">
+				<option value="classic" selected>classic</option>
+				<option value="a11y">accessible</option>
+			</select>
+			<button type="submit">
+				<span class="sr-only">Set theme</span><Arrow />
+			</button>
+		</form>
+	</section>
 	<a href="/"><img src="/images/logo.jpg" alt="Beautiful thinking" /></a>
 	<nav>
 		<ul role="list">
@@ -25,7 +59,6 @@ import Announcements from "./Announcements.astro";
 	<Announcements />
 </header>
 
-<!-- TODO: move some of this style into global sheets, fix the existing styles (remove most), and use tokens -->
 <style>
 	header {
 		display: flex;
@@ -127,5 +160,125 @@ import Announcements from "./Announcements.astro";
 			font-size: 0.75rem;
 			text-align: center;
 		}
+
+		.account-settings {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.25rem 3rem;
+			padding-block: 0.25rem;
+			padding-inline: 1rem;
+			background-color: var(--colour-white);
+			border-block-end: var(--border);
+
+			justify-content: end;
+
+			form {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				font-size: 0.8rem;
+
+				label {
+					min-width: max-content;
+					color: var(--colour-grey-dark);
+				}
+
+				input,
+				select {
+					min-height: 1.75rem;
+				}
+
+				button {
+					background: none;
+					border: none;
+					padding: 0;
+					margin: 0;
+
+					display: flex;
+					place-items: center;
+
+					svg {
+						fill: var(--colour-grey-dark);
+					}
+
+					&:hover svg,
+					&:focus svg {
+						fill: var(--colour-focus);
+					}
+				}
+			}
+		}
 	}
 </style>
+
+<script>
+	// Function: update selected date (date picker)
+	const updateDatePicker = (date: string) => {
+		if (date) {
+			body.dataset.date = date.toString();
+		}
+	};
+
+	// Function: update selected theme (theme picker)
+	const updateThemePicker = (theme: string) => {
+		if (theme) {
+			body.dataset.theme = theme;
+			themePicker.value = theme;
+			localStorage.setItem("theme", theme);
+		}
+	};
+
+	// Get DOM elements
+	const body = document.body;
+	const datePicker = document.getElementById("date-picker") as HTMLInputElement;
+	const themePicker = document.getElementById(
+		"theme-picker"
+	) as HTMLSelectElement;
+	const datePickerButton = datePicker?.nextElementSibling as HTMLButtonElement;
+	const themePickerButton =
+		themePicker?.nextElementSibling as HTMLButtonElement;
+
+	// ** Initial state **
+
+	// Event: initial page load
+	window.addEventListener("load", () => {
+		// Set the current site date (based on date picker)
+		const date = datePicker?.value;
+		updateDatePicker(date);
+
+		// Set current theme (based on local storage or theme picker)
+		const themeSelected = themePicker?.value;
+		const theme = localStorage.getItem("theme") || themeSelected;
+		updateThemePicker(theme);
+	});
+
+	// ** Date picker **
+
+	// Event: date changed via input
+	datePicker?.addEventListener("change", (event) => {
+		const date = (event.target as HTMLInputElement).value;
+		updateDatePicker(date);
+	});
+
+	// Event: date changed via button
+	datePickerButton?.addEventListener("click", (event) => {
+		event.preventDefault();
+		const date = datePicker?.value;
+		updateDatePicker(date);
+	});
+
+	// ** Theme picker **
+
+	// Event: theme changed via select
+	themePicker?.addEventListener("change", (event) => {
+		const theme = (event.target as HTMLInputElement).value;
+		updateThemePicker(theme);
+	});
+
+	// Event: theme changed via button
+	themePickerButton?.addEventListener("click", (event) => {
+		event.preventDefault();
+		const theme = themePicker?.value;
+		updateThemePicker(theme);
+	});
+</script>

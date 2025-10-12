@@ -2,6 +2,8 @@
 import Arrow from "../assets/ArrowIcon.svg";
 import { formatDate } from "../utilities/formatDate";
 
+// TODO: Based on the About Us page, there was maybe some kind of guestbook or comment feed on the sidebar, called Thoughts? Do I want that?
+
 // Latest Thought
 // TODO: Fetch thoughts based on collection published date and current date, adjusted for year. Should update in "real time". Can be random instead if that is too hard.
 const latestThought = {
@@ -43,7 +45,7 @@ const photo = {
 		</form>
 	</search>
 	<section class="social-widget">
-		<h2>Latest Thought</h2>
+		<h2>Our Thoughts</h2>
 		<article>
 			<p>{latestThought.content}</p>
 			<footer data-layout="content">

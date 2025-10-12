@@ -1,62 +1,134 @@
 ---
-import BaseHead from "../components/BaseHead.astro";
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
-import { SITE_TITLE } from "../consts";
+import { getCollection } from "astro:content";
+import Global from "../layouts/Global.astro";
+import Arrow from "../assets/ArrowIcon.svg";
+import { formatDate } from "../utilities/formatDate";
+
+const blogs = (await getCollection("blog")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter
-				template. This template serves as a lightweight, minimally-styled starting
-				point for anyone looking to build a personal website, blog, or portfolio
-				with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add
-				tools like Tailwind, React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>
-					Edit the site header items in <code>src/components/Header.astro</code>
-				</li>
-				<li>
-					Add your name to the footer in <code
-						>src/components/Footer.astro</code>
-				</li>
-				<li>
-					Check out the included blog posts in <code>src/content/blog/</code>
-				</li>
-				<li>
-					Customize the blog post page layout in <code
-						>src/layouts/BlogPost.astro</code>
-				</li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template</a
-				>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<Global title="Archive">
+	<h1>Blog</h1>
+	<ol role="list">
+		{
+			blogs.map(async (post) => {
+				const { slug, title, author, pubDate } = post.data;
+
+				// Create formatted date
+				const date = formatDate(pubDate);
+
+				// Generate excerpt
+				const excerpt =
+					post.body
+						?.split("\n")[0] // Take first paragraph
+						.replaceAll(/<su[p|b]>[0-9]*<\/su[p|b]>/gi, "") // Remove superscript and subscript numbers
+						.replaceAll(/<[a-z]*>(.*)<\/[a-z]*>/gi, "$1") // Remove HTML tags
+						.slice(0, 180) + "…";
+
+				// Total comments
+				const comments = (
+					await getCollection("comments", ({ data }) => {
+						return data.postID === post.data.id;
+					})
+				).sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+
+				return (
+					<li>
+						<header>
+							<time datetime={date.html}>{date.short}</time>
+							<h2>
+								<a href={`/blog/${slug}`}>{title}</a>
+							</h2>
+							<p>
+								Submitted by <span>{author}</span>
+							</p>
+						</header>
+						<p class="excerpt" set:html={excerpt} />
+						<footer>
+							<a href={`/blog/${slug}`}>
+								Read more <Arrow />
+							</a>
+							<p>{comments.length || "0"} Comments</p>
+						</footer>
+					</li>
+				);
+			})
+		}
+	</ol>
+</Global>
+
+<style>
+	ol {
+		flex-direction: column;
+
+		time {
+			display: flex;
+			inline-size: 4em;
+			aspect-ratio: 1 / 1;
+			padding-inline: 1rem;
+			background-color: var(--colour-grey-light);
+			border-radius: 0.25rem;
+
+			place-items: center;
+			text-align: center;
+			text-transform: lowercase;
+			font-size: 0.8rem;
+			line-height: 1.2;
+		}
+
+		header {
+			display: grid;
+			grid-template-columns: max-content 1fr;
+			gap: 0 1.5rem;
+
+			time {
+				grid-row: span 2;
+			}
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		a:hover,
+		a:focus {
+			color: var(--colour-focus);
+		}
+
+		h2 {
+			align-self: end;
+			line-height: 1;
+		}
+
+		p {
+			font-size: 0.8rem;
+		}
+
+		p span {
+			color: var(--colour-blue-mid);
+		}
+
+		.excerpt {
+			margin-block-end: 1rem;
+			margin-inline-start: 4.675rem;
+			font-size: 1rem;
+			line-height: 1.3;
+		}
+
+		footer {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0 1rem;
+			justify-content: space-between;
+			font-size: 0.8rem;
+			margin-inline-start: 4.675rem;
+
+			a {
+				display: flex;
+				align-items: center;
+			}
+		}
+	}
+</style>

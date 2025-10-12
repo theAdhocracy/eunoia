@@ -14,6 +14,14 @@ export const formatDate = (date: Date | string) => {
 		.format(new Date(date))
 		.toString();
 
+	// Short date (e.g. 11 Oct)
+	const short = new Intl.DateTimeFormat("en-GB", {
+		day: "numeric",
+		month: "short",
+	})
+		.format(new Date(date))
+		.toString();
+
 	// Datetime
 	const datetime = new Intl.DateTimeFormat("en-US", {
 		year: "numeric",
@@ -31,5 +39,6 @@ export const formatDate = (date: Date | string) => {
 		html: html,
 		formatted: formatted,
 		datetime: datetime,
+		short: short,
 	};
 };

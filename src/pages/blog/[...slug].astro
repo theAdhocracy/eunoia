@@ -9,8 +9,8 @@ export async function getStaticPaths() {
 
 	return posts.map((post, index) => {
 		// Fetch next and previous posts
-		const next = posts[index + 1];
-		const prev = posts[index - 1];
+		const next = posts[index - 1];
+		const prev = posts[index + 1];
 
 		// Merge post data with prev/next info
 		const props = { post, prev, next };

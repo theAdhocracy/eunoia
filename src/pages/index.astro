@@ -14,7 +14,7 @@ const blogs = (await getCollection("blog")).sort(
 	<ol role="list">
 		{
 			blogs.map(async (post) => {
-				const { slug, title, author, pubDate } = post.data;
+				const { slug, title, author, pubDate, description } = post.data;
 
 				// Create formatted date
 				const date = formatDate(pubDate);
@@ -45,7 +45,7 @@ const blogs = (await getCollection("blog")).sort(
 								Submitted by <span>{author}</span>
 							</p>
 						</header>
-						<p class="excerpt" set:html={excerpt} />
+						<p class="excerpt" set:html={description ? description : excerpt} />
 						<footer>
 							<a href={`/blog/${slug}`}>
 								Read more <Arrow />

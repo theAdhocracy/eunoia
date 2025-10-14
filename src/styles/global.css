@@ -73,6 +73,22 @@ select {
 	color: var(--colour-grey-dark);
 }
 
+blockquote {
+	margin: 0 0.5rem;
+	padding-inline: 2rem;
+	border-inline-start: 5px solid var(--colour-border);
+	font-style: italic;
+	color: var(--colour-grey-dark);
+
+	* {
+		line-height: 1.2;
+	}
+
+	* + *:not(br) {
+		margin-block-start: 0.5em;
+	}
+}
+
 /* Layout classes */
 
 [data-layout="content"] {

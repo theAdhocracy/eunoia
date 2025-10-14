@@ -1,7 +1,7 @@
 ---
 import { formatDate } from "../utilities/formatDate";
 
-const { content, author, date: postDate } = Astro.props;
+const { content, author, date: postDate, reply, replyLevel } = Astro.props;
 
 // Format date
 const date = formatDate(postDate);
@@ -37,9 +37,11 @@ switch (author.toLowerCase()) {
 	class="comment"
 	data-layout="content"
 	data-admin={isAdmin ? "true" : "false"}
+	data-reply={reply ? "true" : "false"}
+	style={`--reply-margin: ${reply ? (replyLevel ? replyLevel : 1) * 1.5 : 0}rem;`}
 >
 	<header>
-		<h3>{author} says:</h3>
+		<h3>{author} {reply ? "replies" : "says"}:</h3>
 		<time datetime={date.html}>{date.datetime}</time>
 		<img src={avatar.src} alt={avatar.alt} />
 	</header>
@@ -84,6 +86,10 @@ switch (author.toLowerCase()) {
 
 		&[data-admin="true"] {
 			border-color: var(--colour-blue-mid);
+		}
+
+		&[data-reply="true"] {
+			margin-inline-start: var(--reply-margin, 1.5rem);
 		}
 	}
 </style>

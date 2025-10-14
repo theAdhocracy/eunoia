@@ -39,6 +39,51 @@ const comments = (
 	})
 ).sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
 
+// Separate root comments and replies
+const roots = [];
+const replies = [];
+
+for (const comment of comments) {
+	if (comment.data.reply) {
+		replies.push(comment);
+	} else {
+		roots.push(comment);
+	}
+}
+
+// Insert replies after their parent comment, including nested replies
+const threaded = [...roots];
+let remainingReplies = [...replies];
+
+while (remainingReplies.length > 0) {
+	let placed = false; // safeguard against infinite loops
+
+	// Loop through remaining replies
+	for (let i = 0; i < remainingReplies.length; i++) {
+		const reply = remainingReplies[i];
+		const parentIndex = threaded.findIndex((c) => c.id === reply.data.reply);
+
+		// findIndex returns -1 if not found; value can be 0 or greater
+		if (parentIndex !== -1) {
+			// Find the last reply to the same parent
+			let insertIndex = parentIndex + 1;
+			for (let j = insertIndex; j < threaded.length; j++) {
+				if (threaded[j].data.reply === reply.data.reply) {
+					insertIndex = j + 1;
+				}
+			}
+
+			threaded.splice(insertIndex, 0, reply); // add to thread
+			remainingReplies.splice(i, 1); // remove from remaining replies
+			placed = true;
+			break; // Restart loop since array changed
+		}
+	}
+
+	// Prevent infinite loop if a reply's parent isn't found
+	if (!placed) break;
+}
+
 // Pagination
 const pagination = {
 	prev: {
@@ -52,6 +97,6 @@ const pagination = {
 };
 ---
 
-<BlogPost {...post.data} comments={comments} pagination={pagination}>
+<BlogPost {...post.data} comments={threaded} pagination={pagination}>
 	<Content />
 </BlogPost>

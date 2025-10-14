@@ -27,6 +27,8 @@ const comments = defineCollection({
 			postID: z.string(),
 			author: z.string(),
 			date: z.coerce.date(),
+			reply: z.string().optional(),
+			replyLevel: z.number().optional(),
 		}),
 });
 

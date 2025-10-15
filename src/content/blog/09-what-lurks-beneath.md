@@ -16,4 +16,4 @@ Looking over the side of this small platform, directly below us in the water was
 
 Nevertheless we stayed on that dive platform for quite some time, hoping it would go away (we could just see it by peering over the edge - it really was big, about a metre/metre and a half in length) before eventually taking a running leap and striking out to shore as quickly as possible. I doubt it was harmful in any way but try telling your brain that when your eyes are registering a huge, streamlined fish with a mouth of razor teeth and the message soon gets lost in translation.
 
-Regardless by the time we reached shore I noticed quite a few other swimmers watching us incredulously. They obviously hadn’t looked _under_ the water yet.
+Regardless by the time we reached shore I noticed quite a few other swimmers watching us incredulously. They obviously hadn’t looked <em>under</em> the water yet.

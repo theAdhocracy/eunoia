@@ -14,7 +14,7 @@ Briefly mentioning our last post, the first Eunoia Vlog, we had a lot of feedbac
 
 Yes indeed, Sunday was Carnival on the French side of the island so we went over to take a peek. I have to say, it really gave us a flavour of local culture; advertised to start at 2pm we trucked up at 4pm and still had to wait thirty minutes for anything to begin. Welcome to the islands!
 
-I think the photos pretty much sum up the atmosphere; it’s no Rio but the costumes were still pretty extravagant and certainly colourful and man alive do they enjoy their bass! Every group of dancers or float would be broken by a giant music truck with amps and speakers stacked 6metre+ high on the back all ramped up to maximum volume so when they went by you really _felt_ the euro-trash beat. I think there was some form of competition going on but we didn’t stick around to find out who won.
+I think the photos pretty much sum up the atmosphere; it’s no Rio but the costumes were still pretty extravagant and certainly colourful and man alive do they enjoy their bass! Every group of dancers or float would be broken by a giant music truck with amps and speakers stacked 6metre+ high on the back all ramped up to maximum volume so when they went by you really <em>felt</em> the euro-trash beat. I think there was some form of competition going on but we didn’t stick around to find out who won.
 
 The only other piece of pseudo-news would be from today. It’s a Monday, yet Mike and I were not at work like good little boys. No once again we were down at the beach, jetting out to Creole Rock with scuba gear just so one of us could sit on the boat and watch the other one having all the fun. Only this time it was Mike’s turn!
 

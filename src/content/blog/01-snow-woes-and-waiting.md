@@ -15,6 +15,6 @@ I just hope we aren’t too tired to take part in Jo and Sean’s celebrations �
 
 P.S Sorry to anyone who left comments on the old blogs. They were read and then accidentally deleted along with the original test posts. It won’t happen again 😉
 
----
+<hr>
 
 <span class="footnote">1: that is 8pm in New York. It’s half midnight back at home and feels even later to our exhausted bodies.</span>

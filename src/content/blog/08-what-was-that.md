@@ -8,7 +8,7 @@ tags: ["audio", "tree frog", "wildlife", "planes", "ill"]
 description: "More of an update than an article but if you've ever wanted to hear an annoying tree frog you might find some interest here."
 ---
 
-So writing this more out of a feeling of responsibility than because I have something interesting to say. Should let everyone know we have a new (small) album up, you can navigate via sidebar or through the gallery (link above) as ever; photos courtesy of Jo and mainly focus on plane watching (see [Oops!](/blog/oops)).
+So writing this more out of a feeling of responsibility than because I have something interesting to say. Should let everyone know we have a new (small) album up, you can navigate via sidebar or through the gallery (link above) as ever; photos courtesy of Jo and mainly focus on plane watching (see <a href="/blog/oops">Oops!</a>).
 
 Today can be summed up in a few lines: went to doctors; Mike had his jab; I was diagnosed with head congestion; walked home; relaxed. No scuba, it’s their day off. Still we saw some parts of the island we weren’t expecting.
 

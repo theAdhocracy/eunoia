@@ -1,0 +1,17 @@
+---
+id: "019"
+slug: article-nineteen
+title: "Article #19"
+pubDate: "2009-03-07"
+author: "Murray"
+tags: ["boat", "Jo & Sean", "Kanaloa", "work"]
+description: "Just really to let you all know we're still alive..."
+---
+
+So don't really have anything to say but feel that a week of radio silence should really be broken. We had hoped to make some vlogs today but it's been overcast and rainy so framerate was pretty low and then we started watching some films and now we have no time. \*sigh\*
+
+Pretty much the last week has been purely work. We get up some time around 7am and catch a lift in with Sean; spend the day doing odd jobs around the workshop and the last few days working on Kanaloa a little gunboat (fast catamaran) fitting some new windows. We'll try a little harder over the weekend to actually shoot a more detailed vlog on work but it feels a little bitty and fractured to be typed in a meaningful way...kinda like this article.
+
+Today was a day off due to the Heineken Regatta which we could see from the balcony at J&amp;S's but apparently the swell and weather wasn't ideal so glad we weren't actually participating. Plus it rained quite a lot today so staying in the house was the right move to make.
+
+Other than that there isn't really much to mention. Weekends are normally more eventful so should have something more to say tomorrow and hopefully some photos/vlogs as well. Who knows...

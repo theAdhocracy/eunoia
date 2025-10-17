@@ -22,4 +22,4 @@ The Heineken Regatta is the biggest sailing event in the Caribbean and about 200
 
 Below are some videos and there are also some pictures of the Regatta:
 
-TODO: find these videos and pictures
+TODO: find these videos and pictures (based on comments, it's possible they never existed...)

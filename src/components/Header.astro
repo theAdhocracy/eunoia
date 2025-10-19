@@ -280,11 +280,50 @@ const map =
 	}
 </style>
 
+<script is:inline define:vars={{ maps }}>
+	const body = document.body;
+	const location = document.querySelector("header .location");
+
+	// Function: Update map based on selected date
+	const updateMap = (date, maps) => {
+		// Find the map for the selected date
+		const map =
+			maps.find((m) => date >= new Date(m.from) && date <= new Date(m.to)) ||
+			maps[0];
+
+		// Update the location text
+		const locationText = location.querySelector("p");
+		if (locationText) {
+			locationText.textContent = `Location: ${map.location}`;
+		}
+
+		// Update the map image
+		const mapImage = location.querySelector("img");
+		if (mapImage) {
+			mapImage.src = map.src;
+		}
+	};
+
+	// Listen for changes in the data-date attribute and update map accordingly
+	const observer = new MutationObserver((mutationsList) => {
+		mutationsList.forEach((mutation) => {
+			if (mutation.type === "attributes") {
+				if (mutation.attributeName === "data-date") {
+					updateMap(new Date(body.dataset.date), maps);
+				}
+			}
+		});
+	});
+
+	observer.observe(body, { attributes: true });
+</script>
+
 <script>
 	// Function: update selected date (date picker)
 	const updateDatePicker = (date: string) => {
 		if (date) {
 			body.dataset.date = date.toString();
+			sessionStorage.setItem("date", date);
 		}
 	};
 
@@ -312,7 +351,9 @@ const map =
 	// Event: initial page load
 	window.addEventListener("load", () => {
 		// Set the current site date (based on date picker)
-		const date = datePicker?.value;
+		const todayAgo = new Date().toString().replace(/^[0-9]{4}-/, "2009-");
+		const date = sessionStorage.getItem("date") || todayAgo;
+		if (datePicker) datePicker.value = date;
 		updateDatePicker(date);
 
 		// Set current theme (based on local storage or theme picker)

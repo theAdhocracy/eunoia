@@ -124,6 +124,10 @@ dl {
 	list-style: inside;
 }
 
+ol {
+	list-style-type: decimal;
+}
+
 ul[role="list"],
 ol[role="list"] {
 	list-style: none;

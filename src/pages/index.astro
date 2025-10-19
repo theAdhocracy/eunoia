@@ -67,7 +67,7 @@ const pageCount = Math.ceil(blogs.length / 6);
 				pageCount > 1 &&
 					Array.from({ length: pageCount }).map((_, index) => (
 						<li>
-							<button type="button" aria-current={index === 0}>
+							<button type="button">
 								<span class="sr-only">Page </span>
 								{index + 1}
 							</button>
@@ -81,12 +81,32 @@ const pageCount = Math.ceil(blogs.length / 6);
 
 <script>
 	// Function: initialise pagination
-	const initPagination = (pagination: Element | null) => {
+	const initPagination = (
+		pagination: Element | null,
+		posts: NodeListOf<Element>
+	) => {
 		if (!pagination) return false;
 
+		const currentPage =
+			new URL(window.location.href).searchParams.get("page") || "1";
+		const pageIndex = parseInt(currentPage) - 1;
+
+		// Show pagination
 		pagination.removeAttribute("hidden");
-		posts.forEach((post, index) => {
-			if (index >= 6) {
+
+		// Set aria-current on current page button
+		const pageButtons = pagination.querySelectorAll(
+			"ol button"
+		) as NodeListOf<HTMLButtonElement>;
+		pageButtons.forEach((button, index) => {
+			if (index === pageIndex) {
+				button.setAttribute("aria-current", "true");
+			}
+		});
+
+		// Hide all posts except the chosen page
+		posts.forEach((post, postIndex) => {
+			if (!(postIndex >= pageIndex * 6 && postIndex < (pageIndex + 1) * 6)) {
 				post.setAttribute("hidden", "");
 			}
 		});
@@ -94,18 +114,28 @@ const pageCount = Math.ceil(blogs.length / 6);
 		return true;
 	};
 
+	// Function: update URL with selected page
+	const paginateURL = (pageIndex: number) => {
+		const url = new URL(window.location.href);
+		url.searchParams.set("page", (pageIndex + 1).toString());
+		window.history.replaceState({}, "", url.toString());
+	};
+
 	// Get elements
 	const posts = document.querySelectorAll("#blog-posts > li");
 	const pagination = document.querySelector(
 		"nav[aria-label='Blog pagination']"
 	);
+
+	// Initiate pagination
+	const paginationInitiated = initPagination(pagination, posts);
+
+	// Get pagination buttons
 	const pageButtons = pagination?.querySelectorAll(
 		"ol button"
 	) as NodeListOf<HTMLButtonElement>;
 	const prevButton = pagination?.querySelector(".prev");
 	const nextButton = pagination?.querySelector(".next");
-
-	const paginationInitiated = initPagination(pagination);
 
 	// Function: pagination (page) buttons
 	if (paginationInitiated && pageButtons) {
@@ -123,43 +153,43 @@ const pageCount = Math.ceil(blogs.length / 6);
 						post.setAttribute("hidden", "");
 					}
 				});
+
+				// Update URL
+				paginateURL(pageIndex);
 			});
 		});
 	}
 
 	// Function: previous button
-	if (paginationInitiated && prevButton) {
-		prevButton.addEventListener("click", () => {
-			const currentPageButton = pagination?.querySelector(
-				"ol button[aria-current='true']"
-			);
-			if (!currentPageButton) return;
+	prevButton?.addEventListener("click", () => {
+		const currentPageButton = document.querySelector(
+			"ol button[aria-current='true']"
+		);
+		if (!currentPageButton) return;
 
-			const currentPageIndex = Array.from(pageButtons || []).indexOf(
-				currentPageButton as HTMLButtonElement
-			);
-			if (currentPageIndex > 0) {
-				pageButtons?.[currentPageIndex - 1]?.click();
-			}
-		});
-	}
+		const currentPageIndex = Array.from(pageButtons || []).indexOf(
+			currentPageButton as HTMLButtonElement
+		);
+		if (currentPageIndex > 0) {
+			pageButtons?.[currentPageIndex - 1]?.click();
+		}
+	});
 
 	// Function: next button
-	if (paginationInitiated && nextButton) {
-		nextButton.addEventListener("click", () => {
-			const currentPageButton = pagination?.querySelector(
-				"ol button[aria-current='true']"
-			);
-			if (!currentPageButton) return;
+	nextButton?.addEventListener("click", () => {
+		const currentPageButton = document.querySelector(
+			"ol button[aria-current='true']"
+		);
+		if (!currentPageButton) return;
 
-			const currentPageIndex = Array.from(pageButtons || []).indexOf(
-				currentPageButton as HTMLButtonElement
-			);
-			if (currentPageIndex > 0) {
-				pageButtons?.[currentPageIndex + 1]?.click();
-			}
-		});
-	}
+		const currentPageIndex = Array.from(pageButtons || []).indexOf(
+			currentPageButton as HTMLButtonElement
+		);
+
+		if (currentPageIndex < pageButtons.length - 1) {
+			pageButtons?.[currentPageIndex + 1]?.click();
+		}
+	});
 </script>
 
 <style>

@@ -7,13 +7,16 @@ import { formatDate } from "../utilities/formatDate";
 const blogs = (await getCollection("blog")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+// Total pages
+const pageCount = Math.ceil(blogs.length / 6);
 ---
 
 <Global title="Archive">
 	<h1>Blog</h1>
-	<ol role="list">
+	<ol id="blog-posts" role="list">
 		{
-			blogs.map(async (post) => {
+			blogs.map(async (post, index) => {
 				const { slug, title, author, pubDate, description } = post.data;
 
 				// Create formatted date
@@ -35,7 +38,7 @@ const blogs = (await getCollection("blog")).sort(
 				).sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
 
 				return (
-					<li>
+					<li data-index={index}>
 						<header>
 							<time datetime={date.html}>{date.short}</time>
 							<h2>
@@ -57,7 +60,107 @@ const blogs = (await getCollection("blog")).sort(
 			})
 		}
 	</ol>
+	<nav aria-label="Blog pagination" hidden>
+		<button class="prev" type="button"><Arrow /> previous</button>
+		<ol role="list">
+			{
+				pageCount > 1 &&
+					Array.from({ length: pageCount }).map((_, index) => (
+						<li>
+							<button type="button" aria-current={index === 0}>
+								<span class="sr-only">Page </span>
+								{index + 1}
+							</button>
+						</li>
+					))
+			}
+		</ol>
+		<button class="next" type="button">next <Arrow /></button>
+	</nav>
 </Global>
+
+<script>
+	// Function: initialise pagination
+	const initPagination = (pagination: Element | null) => {
+		if (!pagination) return false;
+
+		pagination.removeAttribute("hidden");
+		posts.forEach((post, index) => {
+			if (index >= 6) {
+				post.setAttribute("hidden", "");
+			}
+		});
+
+		return true;
+	};
+
+	// Get elements
+	const posts = document.querySelectorAll("#blog-posts > li");
+	const pagination = document.querySelector(
+		"nav[aria-label='Blog pagination']"
+	);
+	const pageButtons = pagination?.querySelectorAll(
+		"ol button"
+	) as NodeListOf<HTMLButtonElement>;
+	const prevButton = pagination?.querySelector(".prev");
+	const nextButton = pagination?.querySelector(".next");
+
+	const paginationInitiated = initPagination(pagination);
+
+	// Function: pagination (page) buttons
+	if (paginationInitiated && pageButtons) {
+		pageButtons.forEach((button, pageIndex) => {
+			button.addEventListener("click", () => {
+				// Update aria-current
+				pageButtons.forEach((btn) => btn.removeAttribute("aria-current"));
+				button.setAttribute("aria-current", "true");
+
+				// Show/hide posts
+				posts.forEach((post, postIndex) => {
+					if (postIndex >= pageIndex * 6 && postIndex < (pageIndex + 1) * 6) {
+						post.removeAttribute("hidden");
+					} else {
+						post.setAttribute("hidden", "");
+					}
+				});
+			});
+		});
+	}
+
+	// Function: previous button
+	if (paginationInitiated && prevButton) {
+		prevButton.addEventListener("click", () => {
+			const currentPageButton = pagination?.querySelector(
+				"ol button[aria-current='true']"
+			);
+			if (!currentPageButton) return;
+
+			const currentPageIndex = Array.from(pageButtons || []).indexOf(
+				currentPageButton as HTMLButtonElement
+			);
+			if (currentPageIndex > 0) {
+				pageButtons?.[currentPageIndex - 1]?.click();
+			}
+		});
+	}
+
+	// Function: next button
+	if (paginationInitiated && nextButton) {
+		nextButton.addEventListener("click", () => {
+			const currentPageButton = pagination?.querySelector(
+				"ol button[aria-current='true']"
+			);
+			if (!currentPageButton) return;
+
+			const currentPageIndex = Array.from(pageButtons || []).indexOf(
+				currentPageButton as HTMLButtonElement
+			);
+			if (currentPageIndex > 0) {
+				pageButtons?.[currentPageIndex + 1]?.click();
+			}
+		});
+	}
+</script>
 
 <style>
 	ol {
@@ -129,6 +232,60 @@ const blogs = (await getCollection("blog")).sort(
 				display: flex;
 				align-items: center;
 			}
+		}
+	}
+
+	nav {
+		display: flex;
+		justify-content: center;
+		gap: 1.5rem;
+		margin-block: 1rem 2rem;
+
+		ol {
+			--gutter: 0.5rem;
+			flex-direction: row;
+			justify-content: center;
+
+			button {
+				width: 2rem;
+				padding: 0.5rem;
+				aspect-ratio: 1 / 1;
+				background-color: var(--colour-grey-light);
+				border: none;
+				color: var(--colour-text);
+
+				&:hover,
+				&:focus-visible {
+					background-color: var(--colour-focus);
+					color: var(--colour-background);
+				}
+
+				&[aria-current="true"] {
+					color: var(--colour-blue-mid);
+				}
+			}
+		}
+
+		.prev,
+		.next {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			height: 2rem;
+			background-color: transparent;
+			border: none;
+			color: var(--colour-text);
+			white-space: nowrap;
+			font-size: 0.9rem;
+
+			&:hover,
+			&:focus-visible {
+				color: var(--colour-focus);
+			}
+		}
+
+		.prev svg {
+			transform: rotate(180deg);
 		}
 	}
 </style>

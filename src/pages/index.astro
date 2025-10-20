@@ -9,7 +9,7 @@ const blogs = (await getCollection("blog")).sort(
 );
 
 // Total pages
-const pageCount = Math.ceil(blogs.length / 6);
+const pageCount = Math.ceil(blogs.length / 9);
 ---
 
 <Global title="Archive">
@@ -106,7 +106,7 @@ const pageCount = Math.ceil(blogs.length / 6);
 
 		// Hide all posts except the chosen page
 		posts.forEach((post, postIndex) => {
-			if (!(postIndex >= pageIndex * 6 && postIndex < (pageIndex + 1) * 6)) {
+			if (!(postIndex >= pageIndex * 9 && postIndex < (pageIndex + 1) * 9)) {
 				post.setAttribute("hidden", "");
 			}
 		});
@@ -147,7 +147,7 @@ const pageCount = Math.ceil(blogs.length / 6);
 
 				// Show/hide posts
 				posts.forEach((post, postIndex) => {
-					if (postIndex >= pageIndex * 6 && postIndex < (pageIndex + 1) * 6) {
+					if (postIndex >= pageIndex * 9 && postIndex < (pageIndex + 1) * 9) {
 						post.removeAttribute("hidden");
 					} else {
 						post.setAttribute("hidden", "");

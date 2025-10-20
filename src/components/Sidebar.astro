@@ -19,6 +19,32 @@ const latestThought = {
 
 const thoughtDate = formatDate(latestThought.date);
 
+// Recent Comments
+// TODO: Fetch recent comments from the comments collection, limited to 3.
+const comments = [
+	{
+		id: "001",
+		author: "MumJo",
+		content:
+			"Some random thought that we said once 😛 And then there was some more. Up to 120 characters, at the time.",
+		date: "2009-05-13T12:45",
+	},
+	{
+		id: "002",
+		author: "Adrian",
+		content:
+			"Some random thought that we said once 😛 And then there was some more. Up to 120 characters, at the time.",
+		date: "2009-05-13T12:45",
+	},
+	{
+		id: "003",
+		author: "Murray",
+		content:
+			"Some random thought that we said once 😛 And then there was some more. Up to 120 characters, at the time.",
+		date: "2009-05-13T12:45",
+	},
+];
+
 // Latest Photo
 // TODO: Fetch a random photo. Bonus points if it can only be ones that would have been uploaded by that date.
 const photo = {
@@ -46,6 +72,28 @@ const photo = {
 			</button>
 		</form>
 	</search>
+	<section class="chat-widget">
+		<h2>Your Thoughts</h2>
+		{
+			comments.map((comment) => {
+				const date = formatDate(comment.date);
+				return (
+					<article>
+						<p>
+							<span>{comment.author}:</span> {comment.content}
+						</p>
+						<footer data-layout="content">
+							<p>
+								<a href={`/thoughts#${comment.id}`}>
+									<time datetime={date.html}>{date.datetime}</time> <Arrow />
+								</a>
+							</p>
+						</footer>
+					</article>
+				);
+			})
+		}
+	</section>
 	<section class="social-widget">
 		<h2>Our Thoughts</h2>
 		<article>
@@ -192,6 +240,60 @@ const photo = {
 			svg {
 				margin-inline-start: -0.25rem;
 				fill: var(--colour-grey-dark);
+			}
+		}
+	}
+
+	.chat-widget {
+		margin-inline: -1rem;
+		padding: 1.5rem 1rem;
+		background-color: var(--colour-blue-dark);
+		color: var(--colour-white);
+
+		h2 {
+			color: var(--colour-blue-light);
+			margin-block-end: 1rem;
+		}
+
+		article {
+			max-width: fit-content;
+			margin-inline: auto;
+		}
+
+		article + article {
+			margin-block-start: 1rem;
+			padding-block-start: 1rem;
+			border-block-start: 1px solid var(--colour-blue-light);
+		}
+
+		article > p:first-of-type {
+			font-size: 0.9rem;
+			max-width: 39ch;
+
+			span {
+				color: var(--colour-blue-light);
+				padding-inline-end: 0.25rem;
+			}
+		}
+
+		footer {
+			--gutter: 0;
+
+			margin-block-start: 0.25rem;
+			text-align: end;
+			font-size: 0.8rem;
+
+			a {
+				display: inline-flex;
+				align-items: center;
+				justify-content: start;
+				gap: 0.25rem;
+				text-decoration: none;
+				color: var(--colour-blue-light);
+
+				span {
+					max-block-size: 1em;
+				}
 			}
 		}
 	}

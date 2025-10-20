@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import Arrow from "../assets/ArrowIcon.svg";
 import { formatDate } from "../utilities/formatDate";
 
@@ -52,6 +53,66 @@ const photo = {
 	alt: "Placeholder image for photo of the day",
 	caption: "Mike looking off into the middle distance",
 };
+
+// Word Cloud
+// TODO: Fetch actual tags from the site content.
+
+// Fetch only the "tags" arrays from the blog collection
+const blogTags = (await getCollection("blog"))
+	.map((entry) => entry.data.tags)
+	.filter(Boolean);
+
+// Flatten the array and count occurrences of each tag
+const tagCounts = blogTags.flat().reduce(
+	(acc: Record<string, number>, tag) => {
+		if (typeof tag === "string") {
+			acc[tag] = (acc[tag] || 0) + 1;
+		}
+		return acc;
+	},
+	{} as Record<string, number>
+);
+
+// Convert to an array of { text, weight } objects
+const words = Object.entries(tagCounts)
+	.map(([text, count]) => {
+		if (count <= 1) return null; // Skip tags with 1 or fewer occurrences
+
+		return {
+			text,
+			weight: count / 4,
+		};
+	})
+	.filter(Boolean);
+
+// Sort words by weight descending
+words.sort((a, b) => {
+	if (!a && !b) return 0;
+	if (!a) return 1;
+	if (!b) return -1;
+	return b.weight - a.weight;
+});
+
+// Arrange so largest weight is in the middle, smallest at start/end
+const sortedWords = new Array(words.length);
+let center = Math.floor(words.length / 2);
+let left = center - 1;
+let right = center + 1;
+sortedWords[center] = words[0];
+for (let i = 1; i < words.length; i++) {
+	if (i % 2 === 1) {
+		if (right < words.length) {
+			sortedWords[right] = words[i];
+			right++;
+		}
+	} else {
+		if (left >= 0) {
+			sortedWords[left] = words[i];
+			left--;
+		}
+	}
+}
+words.splice(0, words.length, ...sortedWords.filter(Boolean));
 ---
 
 <aside class="sidebar" data-layout="content">
@@ -123,6 +184,20 @@ const photo = {
 				<a href="/photos">Gallery <Arrow /></a>
 			</figcaption>
 		</figure>
+	</section>
+	<section class="word-cloud">
+		<h2 class="sr-only">Word Cloud</h2>
+		<ol role="list">
+			{
+				words.map((word) => {
+					return (
+						<li style={`--word-size: ${word?.weight}rem;`}>
+							<a href={`?search=${word?.text}`}>{word?.text}</a>
+						</li>
+					);
+				})
+			}
+		</ol>
 	</section>
 	<nav class="archives" aria-labelledby="archives-label">
 		<!-- TODO: Implement correct hash links -->
@@ -386,6 +461,41 @@ const photo = {
 				gap: 0.25rem;
 				text-decoration: none;
 			}
+		}
+	}
+
+	.word-cloud {
+		padding-block: 2rem;
+		background-color: white;
+		margin-inline: -1rem;
+		padding-inline: 1rem;
+
+		ol {
+			max-width: 18rem;
+			justify-content: center;
+			align-items: center;
+			gap: 0 0.5rem;
+		}
+
+		li {
+			font-size: var(--font-size, var(--word-size, 1rem));
+			line-height: 1;
+			max-height: 1em;
+		}
+
+		a {
+			text-decoration: none;
+			word-break: normal;
+		}
+
+		a:hover,
+		a:focus-visible {
+			color: var(--colour-focus);
+		}
+
+		li:has(a:hover),
+		li:has(a:focus-visible) {
+			--font-size: max(1rem, var(--word-size));
 		}
 	}
 

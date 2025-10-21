@@ -117,11 +117,11 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 
 <aside class="sidebar" data-layout="content">
 	<search role="search" aria-labelledby="search-label">
-		<!-- TODO: Add search logic -->
 		<form>
 			<label id="search-label" for="search">search</label>
 			<input
 				id="search"
+				name="search"
 				type="search"
 				inputmode="search"
 				autocomplete="off"
@@ -524,3 +524,17 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		}
 	}
 </style>
+
+<script>
+	// Function: Search form
+	const searchForm = document.querySelector("search form");
+
+	searchForm?.addEventListener("submit", (event) => {
+		event.preventDefault();
+		const formData = new FormData(event.target as HTMLFormElement);
+		const query = formData.get("search")?.toString().trim();
+		if (query) {
+			window.location.href = `/search?search=${encodeURIComponent(query)}`;
+		}
+	});
+</script>

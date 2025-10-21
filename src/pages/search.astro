@@ -1,0 +1,163 @@
+---
+import Global from "../layouts/Global.astro";
+---
+
+<Global title="Search Results">
+	<h1>Search Results</h1>
+	<output>
+		<p>JavaScript must be enabled for search to work (sorry).</p>
+	</output>
+</Global>
+
+<script>
+	// Function: fetch blog posts based on search query
+	let results = [];
+	const output = document.querySelector("output");
+	const query =
+		new URLSearchParams(window.location.search).get("search")?.toLowerCase() ||
+		"";
+
+	if (!output) {
+		throw new Error("Output element not found");
+	}
+
+	// Fetch search index
+	const searchIndex = await fetch("/api/search.json")
+		.then((res) => res.json())
+		.then((data) => data.index);
+
+	// Filter based on query
+	if (query) {
+		console.log(query);
+		// Filter results
+		results = searchIndex.filter((item: any) => {
+			const searchString = (
+				item.title +
+				" " +
+				item.author +
+				" " +
+				item.tags.join(" ") +
+				" " +
+				item.description +
+				" " +
+				item.body
+			).toLowerCase();
+			return searchString.includes(query);
+		});
+	} else {
+		// Show the first 10 options
+		results = searchIndex.slice(0, 10);
+	}
+
+	// Format results into list
+	results = results.map((result: any) => {
+		const { slug, title, author, date, description, body, htmlDate } = result;
+
+		return `<li class="card-blog">
+					<header>
+						<time datetime="${htmlDate}">${date}</time>
+						<h2>
+							<a href="/blog/${slug}">${title}</a>
+						</h2>
+						<p>
+							Submitted by <span>${author}</span>
+						</p>
+					</header>
+					<p class="excerpt">${
+						description
+							? description
+							: body
+									.split("\n")[0] // Take first paragraph
+									.replaceAll(/<su[p|b]>[0-9]*<\/su[p|b]>/gi, "") // Remove superscript and subscript numbers
+									.replaceAll(/<[a-z]*>(.*)<\/[a-z]*>/gi, "$1") // Remove HTML tags
+									.slice(0, 180) + "…"
+					}</p>
+					<footer>
+						<a href="/blog/${slug}">
+							Read more >
+						</a>
+					</footer>
+				</li>`;
+	});
+
+	// Output results to page
+	output.innerHTML = results.length
+		? `<ol role="list">${results.join("")}</ol>`
+		: "<p>No results found.</p>";
+</script>
+
+<style is:global>
+	output {
+		margin-block-end: 2rem;
+	}
+
+	.card-blog {
+		time {
+			display: flex;
+			inline-size: 4em;
+			aspect-ratio: 1 / 1;
+			padding-inline: 0.91rem;
+			background-color: var(--colour-grey-light);
+			border-radius: 0.25rem;
+
+			place-items: center;
+			text-align: center;
+			text-transform: lowercase;
+			font-size: 0.8rem;
+			line-height: 1.2;
+		}
+
+		header {
+			display: grid;
+			grid-template-columns: max-content 1fr;
+			gap: 0 1.5rem;
+
+			time {
+				grid-row: span 2;
+			}
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		a:hover,
+		a:focus {
+			color: var(--colour-focus);
+		}
+
+		h2 {
+			align-self: end;
+			line-height: 1;
+		}
+
+		p {
+			font-size: 0.8rem;
+		}
+
+		p span {
+			color: var(--colour-blue-mid);
+		}
+
+		.excerpt {
+			margin-block-end: 1rem;
+			margin-inline-start: 4.675rem;
+			font-size: 1rem;
+			line-height: 1.3;
+		}
+
+		footer {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0 1rem;
+			justify-content: space-between;
+			font-size: 0.8rem;
+			margin-inline-start: 4.675rem;
+
+			a {
+				display: flex;
+				align-items: center;
+			}
+		}
+	}
+</style>

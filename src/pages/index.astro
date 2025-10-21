@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import Global from "../layouts/Global.astro";
 import Arrow from "../assets/ArrowIcon.svg";
 import { formatDate } from "../utilities/formatDate";
+import BlogCard from "../components/BlogCard.astro";
 
 const blogs = (await getCollection("blog")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -17,46 +18,7 @@ const pageCount = Math.ceil(blogs.length / 9);
 	<ol id="blog-posts" role="list">
 		{
 			blogs.map(async (post, index) => {
-				const { slug, title, author, pubDate, description } = post.data;
-
-				// Create formatted date
-				const date = formatDate(pubDate);
-
-				// Generate excerpt
-				const excerpt =
-					post.body
-						?.split("\n")[0] // Take first paragraph
-						.replaceAll(/<su[p|b]>[0-9]*<\/su[p|b]>/gi, "") // Remove superscript and subscript numbers
-						.replaceAll(/<[a-z]*>(.*)<\/[a-z]*>/gi, "$1") // Remove HTML tags
-						.slice(0, 180) + "…";
-
-				// Total comments
-				const comments = (
-					await getCollection("comments", ({ data }) => {
-						return data.postID === post.data.id;
-					})
-				).sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
-
-				return (
-					<li data-index={index}>
-						<header>
-							<time datetime={date.html}>{date.short}</time>
-							<h2>
-								<a href={`/blog/${slug}`}>{title}</a>
-							</h2>
-							<p>
-								Submitted by <span>{author}</span>
-							</p>
-						</header>
-						<p class="excerpt" set:html={description ? description : excerpt} />
-						<footer>
-							<a href={`/blog/${slug}`}>
-								Read more <Arrow />
-							</a>
-							<p>{comments.length || "0"} Comments</p>
-						</footer>
-					</li>
-				);
+				return <BlogCard {...post.data} body={post.body} index={index} />;
 			})
 		}
 	</ol>
@@ -193,76 +155,8 @@ const pageCount = Math.ceil(blogs.length / 9);
 </script>
 
 <style>
-	ol {
+	#blog-posts {
 		flex-direction: column;
-
-		time {
-			display: flex;
-			inline-size: 4em;
-			aspect-ratio: 1 / 1;
-			padding-inline: 0.8rem;
-			background-color: var(--colour-grey-light);
-			border-radius: 0.25rem;
-
-			place-items: center;
-			text-align: center;
-			text-transform: lowercase;
-			font-size: 0.8rem;
-			line-height: 1.2;
-		}
-
-		header {
-			display: grid;
-			grid-template-columns: max-content 1fr;
-			gap: 0 1.5rem;
-
-			time {
-				grid-row: span 2;
-			}
-		}
-
-		a {
-			text-decoration: none;
-		}
-
-		a:hover,
-		a:focus {
-			color: var(--colour-focus);
-		}
-
-		h2 {
-			align-self: end;
-			line-height: 1;
-		}
-
-		p {
-			font-size: 0.8rem;
-		}
-
-		p span {
-			color: var(--colour-blue-mid);
-		}
-
-		.excerpt {
-			margin-block-end: 1rem;
-			margin-inline-start: 4.675rem;
-			font-size: 1rem;
-			line-height: 1.3;
-		}
-
-		footer {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0 1rem;
-			justify-content: space-between;
-			font-size: 0.8rem;
-			margin-inline-start: 4.675rem;
-
-			a {
-				display: flex;
-				align-items: center;
-			}
-		}
 	}
 
 	nav {
@@ -273,7 +167,6 @@ const pageCount = Math.ceil(blogs.length / 9);
 
 		ol {
 			--gutter: 0.5rem;
-			flex-direction: row;
 			justify-content: center;
 
 			button {

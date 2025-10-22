@@ -1,85 +1,6 @@
 ---
 import Announcements from "./Announcements.astro";
 import Arrow from "../assets/ArrowIcon.svg";
-
-// Today's date in 2009 (for date picker default)
-// TODO: This is problematic because the site will set this to the _build date_ not the current date. Maybe remove and handle entirely via the client-side script?
-const today = new Date().toISOString().slice(0, 10);
-const todayAgo = today.replace(
-	/^[0-9]{4}-(?<month>[0-9]{2})-(?<day>[0-9]{2}).*$/,
-	"2009-$<month>-$<day>"
-);
-
-// Dates, time, and locations for map widget
-// TODO: Add in city dates (only have country so far e.g. Kuala Kumpur, Malaysia <-- known from orphaned Header copy)
-const maps = [
-	{
-		location: "Cumbria, United Kingdom",
-		src: "/images/maps/uk.png",
-		from: new Date("2009-01-01"),
-		to: new Date("2009-02-02"),
-	},
-	{
-		location: "JFK, United States",
-		src: "/images/maps/na.png",
-		from: new Date("2009-02-03"),
-		to: new Date("2009-02-03"),
-	},
-	{
-		location: "St. Maarten, West Indies",
-		src: "/images/maps/carib.png",
-		from: new Date("2009-02-04"),
-		to: new Date("2009-03-23"),
-	},
-	{
-		location: "New York, United States",
-		src: "/images/maps/na.png",
-		from: new Date("2009-03-23"),
-		to: new Date("2009-03-26"),
-	},
-	{
-		location: "LAX, United States",
-		src: "/images/maps/na.png",
-		from: new Date("2009-03-27"),
-		to: new Date("2009-03-27"),
-	},
-	{
-		location: "T.A.R.D.I.S, Outside Time",
-		src: "/images/maps/tardis.png",
-		from: new Date("2009-03-28"),
-		to: new Date("2009-03-28"),
-	},
-	{
-		location: "Auckland, New Zealand",
-		src: "/images/maps/kiwi.png",
-		from: new Date("2009-03-29"),
-		to: new Date("2009-04-25"),
-	},
-	{
-		location: "Sydney, Australia",
-		src: "/images/maps/oz.png",
-		from: new Date("2009-04-26"),
-		to: new Date("2009-06-04"),
-	},
-	{
-		location: "Singapore, SE Asia",
-		src: "/images/maps/seasia.png",
-		from: new Date("2009-06-05"),
-		to: new Date("2009-06-25"),
-	},
-	{
-		location: "Cape Town, South Africa",
-		src: "/images/maps/safriq.png",
-		from: new Date("2009-06-26"),
-		to: new Date("2009-07-17"),
-	},
-];
-
-// Determine current map based on selected date
-const map =
-	maps.find(
-		(m) => new Date(todayAgo) >= m.from && new Date(todayAgo) <= m.to
-	) ?? maps[0];
 ---
 
 <header>
@@ -90,7 +11,7 @@ const map =
 				type="date"
 				id="date-picker"
 				name="date-picker"
-				value={todayAgo}
+				value=""
 				min="2009-01-01"
 				max="2009-12-31"
 			/>
@@ -119,9 +40,11 @@ const map =
 			<li><a href="/thoughts">timeline</a></li>
 		</ul>
 		<div class="location">
-			<p>Location: {map.location}</p>
-			<!-- TODO: create a map for Cumbria (and also probably New York, can use NA for LA) -->
-			<img src={map.src} alt="" />
+			<p>
+				Location: <span class="skeleton">Loading...</span>
+				<noscript>Cumbria, United Kingdom</noscript>
+			</p>
+			<img src="/images/maps/uk.png" alt="" />
 		</div>
 		<p class="callout">round the world</p>
 	</nav>
@@ -280,12 +203,91 @@ const map =
 	}
 </style>
 
-<script is:inline define:vars={{ maps }}>
-	const body = document.body;
-	const location = document.querySelector("header .location");
+<script>
+	// Data: maps for different date ranges
+	// TODO: Add in city dates (only have country so far e.g. Kuala Kumpur, Malaysia <-- known from orphaned Header copy)
+	const maps = [
+		{
+			location: "Cumbria, United Kingdom",
+			src: "/images/maps/uk.png",
+			from: new Date("2009-01-01"),
+			to: new Date("2009-02-02"),
+		},
+		{
+			location: "JFK, United States",
+			src: "/images/maps/na.png",
+			from: new Date("2009-02-03"),
+			to: new Date("2009-02-03"),
+		},
+		{
+			location: "St. Maarten, West Indies",
+			src: "/images/maps/carib.png",
+			from: new Date("2009-02-04"),
+			to: new Date("2009-03-23"),
+		},
+		{
+			location: "New York, United States",
+			src: "/images/maps/na.png",
+			from: new Date("2009-03-23"),
+			to: new Date("2009-03-26"),
+		},
+		{
+			location: "LAX, United States",
+			src: "/images/maps/na.png",
+			from: new Date("2009-03-27"),
+			to: new Date("2009-03-27"),
+		},
+		{
+			location: "T.A.R.D.I.S, Outside Time",
+			src: "/images/maps/tardis.png",
+			from: new Date("2009-03-28"),
+			to: new Date("2009-03-28"),
+		},
+		{
+			location: "Auckland, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-03-29"),
+			to: new Date("2009-04-25"),
+		},
+		{
+			location: "Sydney, Australia",
+			src: "/images/maps/oz.png",
+			from: new Date("2009-04-26"),
+			to: new Date("2009-06-04"),
+		},
+		{
+			location: "Singapore, SE Asia",
+			src: "/images/maps/seasia.png",
+			from: new Date("2009-06-05"),
+			to: new Date("2009-06-25"),
+		},
+		{
+			location: "Cape Town, South Africa",
+			src: "/images/maps/safriq.png",
+			from: new Date("2009-06-26"),
+			to: new Date("2009-07-17"),
+		},
+	];
+
+	// Function: update selected date (date picker)
+	const updateDatePicker = (date: string) => {
+		if (date) {
+			body.dataset.date = date.toString();
+			sessionStorage.setItem("date", date);
+		}
+	};
+
+	// Function: update selected theme (theme picker)
+	const updateThemePicker = (theme: string) => {
+		if (theme) {
+			body.dataset.theme = theme;
+			themePicker.value = theme;
+			localStorage.setItem("theme", theme);
+		}
+	};
 
 	// Function: Update map based on selected date
-	const updateMap = (date, maps) => {
+	const updateMap = (date: Date, maps: any[], location: HTMLElement) => {
 		// Find the map for the selected date
 		const map =
 			maps.find((m) => date >= new Date(m.from) && date <= new Date(m.to)) ||
@@ -304,44 +306,9 @@ const map =
 		}
 	};
 
-	// Listen for changes in the data-date attribute and update map accordingly
-	const observer = new MutationObserver((mutationsList) => {
-		mutationsList.forEach((mutation) => {
-			if (mutation.type === "attributes") {
-				if (mutation.attributeName === "data-date") {
-					updateMap(new Date(body.dataset.date), maps);
-					// TODO: Fetch new thoughts data for the selected date
-					// Unsure exactly how to do this, but it should be possible to get Astro to build a folder of JSON files for each thought, and retrieve them that way. Not quite an API, but similar, and should work statically via a fetch request.
-					// May be worth moving this into a separate script file and calling into the head.
-					// Also consider removing the default data e.g. map and thoughts until a date is selected; loading spinners may be preferable.
-				}
-			}
-		});
-	});
-
-	observer.observe(body, { attributes: true });
-</script>
-
-<script>
-	// Function: update selected date (date picker)
-	const updateDatePicker = (date: string) => {
-		if (date) {
-			body.dataset.date = date.toString();
-			sessionStorage.setItem("date", date);
-		}
-	};
-
-	// Function: update selected theme (theme picker)
-	const updateThemePicker = (theme: string) => {
-		if (theme) {
-			body.dataset.theme = theme;
-			themePicker.value = theme;
-			localStorage.setItem("theme", theme);
-		}
-	};
-
 	// Get DOM elements
 	const body = document.body;
+	const location = document.querySelector("header .location") as HTMLElement;
 	const datePicker = document.getElementById("date-picker") as HTMLInputElement;
 	const themePicker = document.getElementById(
 		"theme-picker"
@@ -355,7 +322,7 @@ const map =
 	// Event: initial page load
 	window.addEventListener("load", () => {
 		// Set the current site date (based on date picker)
-		const todayAgo = new Date().toString().replace(/^[0-9]{4}-/, "2009-");
+		const todayAgo = new Date().toString().replace(/^[0-9]{4}-/, "2009-"); // Today's date in 2009 (for date picker default)
 		const date = sessionStorage.getItem("date") || todayAgo;
 		if (datePicker) datePicker.value = date;
 		updateDatePicker(date);
@@ -364,6 +331,9 @@ const map =
 		const themeSelected = themePicker?.value;
 		const theme = localStorage.getItem("theme") || themeSelected;
 		updateThemePicker(theme);
+
+		// Determine current map based on selected date
+		updateMap(new Date(todayAgo), maps, location);
 	});
 
 	// ** Date picker **
@@ -395,4 +365,26 @@ const map =
 		const theme = themePicker?.value;
 		updateThemePicker(theme);
 	});
+
+	// ** Mutations **
+
+	// Mutation: Listen for changes in the data-date attribute and update map accordingly
+	const dateObserver = new MutationObserver((mutationsList) => {
+		mutationsList.forEach((mutation) => {
+			if (mutation.type === "attributes") {
+				if (mutation.attributeName === "data-date") {
+					if (body.dataset.date) {
+						updateMap(new Date(body.dataset.date), maps, location);
+					}
+					// TODO: Fetch new thoughts data for the selected date
+					// Unsure exactly how to do this, but it should be possible to get Astro to build a folder of JSON files for each thought, and retrieve them that way. Not quite an API, but similar, and should work statically via a fetch request.
+					// May be worth moving this into a separate script file and calling into the head.
+					// Also consider removing the default data e.g. map and thoughts until a date is selected; loading spinners may be preferable.
+				}
+			}
+		});
+	});
+
+	// Attach mutations to relevant elements
+	dateObserver.observe(body, { attributes: true });
 </script>

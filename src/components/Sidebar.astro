@@ -55,8 +55,6 @@ const photo = {
 };
 
 // Word Cloud
-// TODO: Fetch actual tags from the site content.
-
 // Fetch only the "tags" arrays from the blog collection
 const blogTags = (await getCollection("blog"))
 	.map((entry) => entry.data.tags)

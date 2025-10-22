@@ -149,3 +149,13 @@ figcaption {
 	position: absolute;
 	white-space: nowrap;
 }
+
+.skeleton {
+	display: none;
+}
+
+@media (scripting: enabled) {
+	.skeleton {
+		display: revert;
+	}
+}

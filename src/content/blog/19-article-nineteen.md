@@ -12,6 +12,22 @@ So don't really have anything to say but feel that a week of radio silence shoul
 
 Pretty much the last week has been purely work. We get up some time around 7am and catch a lift in with Sean; spend the day doing odd jobs around the workshop and the last few days working on Kanaloa a little gunboat (fast catamaran) fitting some new windows. We'll try a little harder over the weekend to actually shoot a more detailed vlog on work but it feels a little bitty and fractured to be typed in a meaningful way...kinda like this article.
 
+<figure>
+
+<video controls>
+	<source src="/videos/gun-boat-st-maarten.mp4" type="video/mp4" />
+	<p>
+		Your browser doesn't support HTML video. Here is a <a href="/videos/gun-boat-st-maarten.mp4" download="/videos/gun-boat-st-maarten.mp4">link to the video</a> instead.
+	</p>
+</video>
+
+<figcaption>
+<span class="sr-only">Video description:  Original caption follows.</span>
+A quick tour of the deck of Kanaloa (plus a rogue Mike). [editor's note: this video was not uploaded in 2009; it was intended for the never-made "work vlog", so it felt best to add it here 😉]
+</figcaption>
+
+</figure>
+
 Today was a day off due to the Heineken Regatta which we could see from the balcony at J&amp;S's but apparently the swell and weather wasn't ideal so glad we weren't actually participating. Plus it rained quite a lot today so staying in the house was the right move to make.
 
 Other than that there isn't really much to mention. Weekends are normally more eventful so should have something more to say tomorrow and hopefully some photos/vlogs as well. Who knows...

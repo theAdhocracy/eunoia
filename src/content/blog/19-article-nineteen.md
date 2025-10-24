@@ -22,7 +22,7 @@ Pretty much the last week has been purely work. We get up some time around 7am a
 </video>
 
 <figcaption>
-<span class="sr-only">Video description:  Original caption follows.</span>
+<span class="sr-only">Video description: A largely silent video looking around the inside of a "gun boat" catamaran. Video starts in the main cabin, panning past several taped off windows mid-repair, past Mike, and around a largely wooden-panelled room, with a few tables and counters. After briefly pausing to show the main wheel at the front of the room, we head down some stairs to a wooden door, through which is a small bedroom and en suite bathroom. Original caption follows.</span>
 A quick tour of the deck of Kanaloa (plus a rogue Mike). [editor's note: this video was not uploaded in 2009; it was intended for the never-made "work vlog", so it felt best to add it here 😉]
 </figcaption>
 

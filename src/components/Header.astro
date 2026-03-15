@@ -124,6 +124,7 @@ import Arrow from "../assets/ArrowIcon.svg";
 			padding-block: 0.25rem;
 			padding-inline: 2em;
 			text-align: center;
+			text-wrap: balance;
 			place-items: center;
 			place-content: center;
 
@@ -223,12 +224,24 @@ import Arrow from "../assets/ArrowIcon.svg";
 			location: "St. Maarten, West Indies",
 			src: "/images/maps/carib.png",
 			from: new Date("2009-02-04"),
+			to: new Date("2009-03-20"),
+		},
+		{
+			location: "Saba, West Indies",
+			src: "/images/maps/carib.png",
+			from: new Date("2009-03-21"),
+			to: new Date("2009-03-21"),
+		},
+		{
+			location: "St. Maarten, West Indies",
+			src: "/images/maps/carib.png",
+			from: new Date("2009-03-22"),
 			to: new Date("2009-03-23"),
 		},
 		{
 			location: "New York, United States",
 			src: "/images/maps/na.png",
-			from: new Date("2009-03-23"),
+			from: new Date("2009-03-24"),
 			to: new Date("2009-03-26"),
 		},
 		{
@@ -247,6 +260,72 @@ import Arrow from "../assets/ArrowIcon.svg";
 			location: "Auckland, New Zealand",
 			src: "/images/maps/kiwi.png",
 			from: new Date("2009-03-29"),
+			to: new Date("2009-03-31"),
+		},
+		{
+			location: "Paihia, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-01"),
+			to: new Date("2009-04-03"),
+		},
+		{
+			location: "Rotorua, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-04"),
+			to: new Date("2009-04-09"),
+		},
+		{
+			location: "River Valley, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-10"),
+			to: new Date("2009-04-10"),
+		},
+		{
+			location: "West Coast, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-11"),
+			to: new Date("2009-04-13"),
+		},
+		{
+			location: "Franz Josef, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-14"),
+			to: new Date("2009-04-16"),
+		},
+		{
+			location: "Queenstown, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-17"),
+			to: new Date("2009-04-18"),
+		},
+		{
+			location: "Milford Sound, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-19"),
+			to: new Date("2009-04-19"),
+		},
+		{
+			location: "Queenstown, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-20"),
+			to: new Date("2009-04-20"),
+		},
+		{
+			location: "Ashburton, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-20"),
+			to: new Date("2009-04-23"),
+		},
+		{
+			location: "Rohan, Middle Earth",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-24"),
+			to: new Date("2009-04-24"),
+		},
+		{
+			location: "Christchurch, New Zealand",
+			src: "/images/maps/kiwi.png",
+			from: new Date("2009-04-25"),
 			to: new Date("2009-04-25"),
 		},
 		{
@@ -311,7 +390,7 @@ import Arrow from "../assets/ArrowIcon.svg";
 	const location = document.querySelector("header .location") as HTMLElement;
 	const datePicker = document.getElementById("date-picker") as HTMLInputElement;
 	const themePicker = document.getElementById(
-		"theme-picker"
+		"theme-picker",
 	) as HTMLSelectElement;
 	const datePickerButton = datePicker?.nextElementSibling as HTMLButtonElement;
 	const themePickerButton =
@@ -322,7 +401,9 @@ import Arrow from "../assets/ArrowIcon.svg";
 	// Event: initial page load
 	window.addEventListener("load", () => {
 		// Set the current site date (based on date picker)
-		const todayAgo = new Date().toString().replace(/^[0-9]{4}-/, "2009-"); // Today's date in 2009 (for date picker default)
+		const todayAgo = new Intl.DateTimeFormat("sv-SE")
+			.format(new Date().setFullYear(2009))
+			.toString(); // Today's date in 2009 (for date picker default)
 		const date = sessionStorage.getItem("date") || todayAgo;
 		if (datePicker) datePicker.value = date;
 		updateDatePicker(date);
@@ -340,14 +421,21 @@ import Arrow from "../assets/ArrowIcon.svg";
 
 	// Event: date changed via input
 	datePicker?.addEventListener("change", (event) => {
-		const date = (event.target as HTMLInputElement).value;
+		let date = (event.target as HTMLInputElement).value;
+
+		// Normalise year to 2009 (prevents people entering anything else)
+		if (!date.startsWith("2009-")) {
+			date = date.replace(/^[0-9]{4}-/, "2009-");
+			(event.target as HTMLInputElement).value = date; // update input
+		}
+
 		updateDatePicker(date);
 	});
 
 	// Event: date changed via button
 	datePickerButton?.addEventListener("click", (event) => {
 		event.preventDefault();
-		const date = datePicker?.value;
+		let date = datePicker?.value;
 		updateDatePicker(date);
 	});
 

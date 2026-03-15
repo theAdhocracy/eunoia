@@ -95,7 +95,7 @@ const pagination = {
 				<section class="image-grid">
 					<ol role="list">
 						{images.map((image, index) => {
-							const { url, description } = image;
+							const { url, caption } = image;
 
 							return (
 								<li>
@@ -132,7 +132,7 @@ const pagination = {
 										</nav>
 										<img src={url} alt="" />
 										<aside>
-											{description && <p>{description}</p>}
+											{caption && <p>{caption}</p>}
 											{/* TODO: Consider adding Facebook comments, date taken, and other metadata */}
 										</aside>
 									</dialog>
@@ -176,6 +176,8 @@ const pagination = {
 	}
 
 	.image-grid {
+		margin-block-end: 2rem;
+
 		ol {
 			flex-direction: row;
 			flex-wrap: wrap;

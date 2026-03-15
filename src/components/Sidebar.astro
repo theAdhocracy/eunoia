@@ -45,11 +45,11 @@ const comments = [
 ];
 
 // Latest Photo
-// TODO: Fetch a random photo. Bonus points if it can only be ones that would have been uploaded by that date.
-const photo = {
-	src: "/images/avatars/mike.jpg",
-	alt: "Placeholder image for photo of the day",
-	caption: "Mike looking off into the middle distance",
+// Initial loading state (before JS runs)
+const loadingPhoto = {
+	src: "",
+	alt: "",
+	caption: "Loading...",
 };
 
 // Word Cloud
@@ -66,7 +66,7 @@ const tagCounts = blogTags.flat().reduce(
 		}
 		return acc;
 	},
-	{} as Record<string, number>
+	{} as Record<string, number>,
 );
 
 // Convert to an array of { text, weight } objects
@@ -174,10 +174,16 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 	<section class="photo-widget">
 		<h2>Photo of the Day</h2>
 		<figure>
-			<img src={photo.src} alt={photo.alt} width="300" height="200" />
+			<img
+				src={loadingPhoto.src}
+				alt={loadingPhoto.alt}
+				loading="lazy"
+				height="300"
+				width="200"
+			/>
 			<figcaption>
-				{photo.caption && <p>{photo.caption}</p>}
-				<a href="/photos">Gallery <Arrow /></a>
+				{loadingPhoto.caption && <p>{loadingPhoto.caption}</p>}
+				<a href="/gallery">Gallery <Arrow /></a>
 			</figcaption>
 		</figure>
 	</section>
@@ -251,6 +257,7 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 
 		padding: 1rem;
 		background-color: var(--colour-grey-light);
+		flex-grow: 1;
 
 		h2 {
 			font-size: 1rem;
@@ -439,6 +446,9 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 
 		img {
 			border: 2px solid var(--colour-border);
+			background-image: url("/images/favicon.png");
+			background-repeat: no-repeat;
+			background-position: 50%;
 		}
 
 		figcaption {
@@ -471,6 +481,7 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 			justify-content: center;
 			align-items: center;
 			gap: 0 0.5rem;
+			margin-inline: auto;
 		}
 
 		li {
@@ -522,6 +533,12 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 </style>
 
 <script>
+	// Function: Determine max date (based on current date or user input)
+	const todayAgo = new Intl.DateTimeFormat("sv-SE")
+		.format(new Date().setFullYear(2009))
+		.toString(); // Today's date in 2009 (as fallback value)
+	const maxDate = sessionStorage.getItem("date") || todayAgo;
+
 	// Function: Search form
 	const searchForm = document.querySelector("search form");
 
@@ -533,4 +550,82 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 			window.location.href = `/search?search=${encodeURIComponent(query)}`;
 		}
 	});
+
+	// Function: Photo of the day
+	const setFeaturedPhoto = (maxDate: string, sessionPhoto?: any) => {
+		let photo = {
+			src: "",
+			alt: "",
+			caption: "",
+			url: "",
+		};
+
+		// Use session image, or fall back to random photo
+		if (!sessionPhoto) {
+			// Get random photo from albums before maxDate
+			const filteredPhotos = photoData.filter(
+				(album: any) => album.date <= maxDate && album.images?.length > 0,
+			);
+			const randomAlbum =
+				filteredPhotos[Math.floor(Math.random() * filteredPhotos.length)];
+			const randomPhoto =
+				randomAlbum?.images?.[
+					Math.floor(Math.random() * randomAlbum.images.length)
+				];
+
+			// Set photo data
+			photo = {
+				src: randomPhoto.url,
+				alt: randomPhoto.alt || "",
+				caption: randomPhoto.caption || "",
+				url: `/gallery/${randomAlbum.slug}`,
+			};
+		} else {
+			photo = JSON.parse(sessionPhoto);
+		}
+
+		// Update DOM
+		if (photoContainer) {
+			// Capture DOM nodes to update
+			const imageElement = photoContainer?.querySelector("img");
+			const photoCaption = photoContainer?.querySelector("figcaption > p");
+			const galleryLink = photoContainer?.querySelector("figcaption a");
+
+			// Image attributes
+			imageElement?.setAttribute("src", photo.src);
+			imageElement?.setAttribute("alt", photo.alt || "");
+
+			// Caption
+			if (photoCaption) {
+				photoCaption.textContent = photo.caption || "";
+			}
+
+			// Gallery link
+			galleryLink?.setAttribute("href", photo.url);
+		}
+
+		// Update session storage
+		sessionStorage.setItem("featuredPhoto", JSON.stringify(photo));
+	};
+
+	// Photo of the day initial state
+	const photoContainer = document.querySelector(".photo-widget figure");
+	const photoData = await fetch("/api/photos.json")
+		.then((res) => res.json())
+		.then((data) => data.index);
+
+	// On initial load, try to retrieve from session (allows it to stay the same between pages)
+	const featuredPhoto = sessionStorage.getItem("featuredPhoto");
+	setFeaturedPhoto(maxDate, featuredPhoto);
+
+	// Event: Custom date change event (updates date-based sections across sidebar)
+	window.addEventListener(
+		"dateChange",
+		(event: CustomEventInit<{ date: string }>) => {
+			console.log("Date change");
+			if (event.detail?.date) {
+				setFeaturedPhoto(event.detail.date);
+			}
+		},
+	);
 </script>

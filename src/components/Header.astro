@@ -23,7 +23,8 @@ import Arrow from "../assets/ArrowIcon.svg";
 			<label for="theme-picker">theme</label>
 			<select id="theme-picker" name="theme-picker">
 				<option value="classic" selected>classic</option>
-				<option value="a11y">accessible</option>
+				<!-- TODO: Create accessible theme -->
+				<!-- <option value="a11y">accessible</option> -->
 			</select>
 			<button type="submit">
 				<span class="sr-only">Set theme</span><Arrow />
@@ -480,10 +481,17 @@ import Arrow from "../assets/ArrowIcon.svg";
 	];
 
 	// Function: update selected date (date picker)
-	const updateDatePicker = (date: string) => {
+	const updateDatePicker = (date: string, event?: boolean) => {
 		if (date) {
 			body.dataset.date = date.toString();
 			sessionStorage.setItem("date", date);
+
+			// Trigger custom event (only when explicitly wanted)
+			if (event) {
+				window.dispatchEvent(
+					new CustomEvent("dateChange", { detail: { date: date.toString() } }),
+				);
+			}
 		}
 	};
 
@@ -537,7 +545,7 @@ import Arrow from "../assets/ArrowIcon.svg";
 			.toString(); // Today's date in 2009 (for date picker default)
 		const date = sessionStorage.getItem("date") || todayAgo;
 		if (datePicker) datePicker.value = date;
-		updateDatePicker(date);
+		updateDatePicker(date, false);
 
 		// Set current theme (based on local storage or theme picker)
 		const themeSelected = themePicker?.value;
@@ -560,14 +568,14 @@ import Arrow from "../assets/ArrowIcon.svg";
 			(event.target as HTMLInputElement).value = date; // update input
 		}
 
-		updateDatePicker(date);
+		updateDatePicker(date, true);
 	});
 
 	// Event: date changed via button
 	datePickerButton?.addEventListener("click", (event) => {
 		event.preventDefault();
 		let date = datePicker?.value;
-		updateDatePicker(date);
+		updateDatePicker(date, true);
 	});
 
 	// ** Theme picker **
@@ -599,6 +607,7 @@ import Arrow from "../assets/ArrowIcon.svg";
 					// Unsure exactly how to do this, but it should be possible to get Astro to build a folder of JSON files for each thought, and retrieve them that way. Not quite an API, but similar, and should work statically via a fetch request.
 					// May be worth moving this into a separate script file and calling into the head.
 					// Also consider removing the default data e.g. map and thoughts until a date is selected; loading spinners may be preferable.
+					// UPDATE: see how the sidebar is working, this can be shifted there. Also may want to update this to use the custom trigger, rather than a DOM mutation
 				}
 			}
 		});

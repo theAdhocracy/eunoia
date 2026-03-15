@@ -1,13 +1,11 @@
 ---
 import { getCollection } from "astro:content";
-import { formatDate } from "../utilities/formatDate";
+
 import Arrow from "../assets/ArrowIcon.svg";
+import DateBox from "./DateBox.astro";
 
 const { slug, title, author, pubDate, description, body, id, index } =
 	Astro.props;
-
-// Create formatted date
-const date = formatDate(pubDate);
 
 // Generate excerpt
 const excerpt =
@@ -27,7 +25,7 @@ const comments = (
 
 <li data-index={index}>
 	<header>
-		<time datetime={date.html}>{date.short}</time>
+		<DateBox date={pubDate} />
 		<h2>
 			<a href={`/blog/${slug}`}>{title}</a>
 		</h2>

@@ -1,0 +1,27 @@
+---
+import { formatDate } from "../utilities/formatDate";
+
+const { date: originalDate } = Astro.props;
+
+// Create formatted date
+const date = formatDate(originalDate);
+---
+
+<time datetime={date.html}>{date.short}</time>
+
+<style>
+	time {
+		display: flex;
+		inline-size: 4em;
+		aspect-ratio: 1 / 1;
+		padding-inline: 0.91rem;
+		background-color: var(--colour-grey-light);
+		border-radius: 0.25rem;
+
+		place-items: center;
+		text-align: center;
+		text-transform: lowercase;
+		font-size: 0.8rem;
+		line-height: 1.2;
+	}
+</style>

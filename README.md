@@ -18,3 +18,12 @@ Originally designed by Michael Coyle and (re)built by [theAdhocracy](https://the
 - For local development, run `npm run dev` and open [localhost:4321](http://localhost:4321)
 
 ## ✔️ To Do
+
+### Photo Gallery
+
+- [] Populate all albums with images
+- [] Consider minimising images for performance
+- [] Scrape all comments from Facebook and add to relevant image arrays
+- [] Get all album descriptions from Facebook and add to relevant image files
+- [] Scrape all captions, probably easiest to copy/paste out of Lightroom (already sanitised)
+- [] Consider adding alt text to all images

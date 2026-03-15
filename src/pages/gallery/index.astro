@@ -9,9 +9,8 @@ const albums = (await getCollection("albums")).sort(
 );
 ---
 
-<Global title="Photos" sidebar={false}>
+<Global title="Gallery" gutter="2rem">
 	<h1>Photo Gallery</h1>
-	<p>Page under construction</p>
 	{
 		albums.length > 0 && (
 			<section class="album-grid">
@@ -94,6 +93,8 @@ const albums = (await getCollection("albums")).sort(
 
 <style>
 	.album-grid {
+		margin-block-end: 2rem;
+
 		ol {
 			display: grid;
 			grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));

@@ -1,0 +1,345 @@
+---
+import { getCollection } from "astro:content";
+import Global from "../../layouts/Global.astro";
+import Pagination from "../../components/Pagination.astro";
+import { formatDate } from "../../utilities/formatDate";
+import { formatAlbumSlug } from "../../utilities/formatAlbumSlug";
+import Cross from "../../assets/CrossIcon.svg";
+import Arrow from "../../assets/ArrowIcon.svg";
+
+// Determine valid album paths
+export async function getStaticPaths() {
+	const albums = (await getCollection("albums")).sort(
+		(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+	);
+
+	return albums.map((album, index) => {
+		const next = albums[index - 1];
+		const prev = albums[index + 1];
+		const props = { album, prev, next };
+
+		// Generate page
+		return {
+			params: { slug: formatAlbumSlug(album.id) },
+			props: props,
+		};
+	});
+}
+
+// Extract content from props
+const { album, prev, next } = Astro.props;
+const { title, date: datePub, description, author, images } = album.data;
+const date = formatDate(datePub);
+
+// Determine country
+const countries = {
+	australia: {
+		map: "oz.png",
+		label: "Australia",
+	},
+	caribbean: {
+		map: "carib.png",
+		label: "Caribbean",
+	},
+	"new-york": {
+		map: "na.png",
+		label: "New York",
+	},
+	"new-zealand": {
+		map: "kiwi.png",
+		label: "New Zealand",
+	},
+	"se-asia": {
+		map: "seasia.png",
+		label: "Southeast Asia",
+	},
+	"south-africa": {
+		map: "safriq.png",
+		label: "South Africa",
+	},
+} as const;
+type CountryKey = keyof typeof countries;
+const country = album.id.split("/")[0] as CountryKey;
+
+// Pagination
+const pagination = {
+	prev: {
+		title: prev ? prev.data.title : "",
+		url: prev ? `/gallery/${formatAlbumSlug(prev.id)}` : "",
+	},
+	next: {
+		title: next ? next.data.title : "",
+		url: next ? `/gallery/${formatAlbumSlug(next.id)}` : "",
+	},
+};
+---
+
+<Global title={title}>
+	<Pagination {...pagination} />
+
+	<!-- Article -->
+	<article class="album" data-layout="content">
+		<header>
+			<img
+				src={`/images/maps/${countries[country]?.map}`}
+				alt={countries[country]?.label}
+			/>
+			<h1>{title}</h1>
+			<p>by <span>{author}</span></p>
+			<p>published <time datetime={date.html}>{date.formatted}</time></p>
+		</header>
+		<p>{description}</p>
+
+		{
+			images && images.length > 0 && (
+				<section class="image-grid">
+					<ol role="list">
+						{images.map((image, index) => {
+							const { url, description } = image;
+
+							return (
+								<li>
+									<button command="show-modal" commandfor={`image-${index}`}>
+										<img src={url} alt="" />
+									</button>
+
+									<dialog id={`image-${index}`} closedby="any" autofocus>
+										<nav aria-label="Gallery navigation">
+											<button
+												type="button"
+												command="--previous"
+												commandfor={`image-${index}`}
+											>
+												<span class="sr-only">Previous</span>
+												<Arrow />
+											</button>
+											<button
+												type="button"
+												command="close"
+												commandfor={`image-${index}`}
+											>
+												<span class="sr-only">Close</span>
+												<Cross />
+											</button>
+											<button
+												type="button"
+												command="--next"
+												commandfor={`image-${index}`}
+											>
+												<span class="sr-only">Next</span>
+												<Arrow />
+											</button>
+										</nav>
+										<img src={url} alt="" />
+										<aside>
+											{description && <p>{description}</p>}
+											{/* TODO: Consider adding Facebook comments, date taken, and other metadata */}
+										</aside>
+									</dialog>
+								</li>
+							);
+						})}
+					</ol>
+				</section>
+			)
+		}
+	</article>
+</Global>
+
+<style>
+	.album {
+		header {
+			clear: both;
+
+			h1 {
+				margin-block-end: 0.25rem;
+				font-size: 1.25rem;
+				font-weight: 600;
+			}
+
+			p {
+				line-height: 1.2;
+				font-size: 0.825rem;
+				color: var(--colour-grey-dark);
+				text-wrap: balance;
+			}
+
+			p span {
+				color: var(--colour-highlight);
+			}
+
+			img {
+				float: right;
+				filter: opacity(0.25);
+			}
+		}
+	}
+
+	.image-grid {
+		ol {
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		button {
+			background: none;
+			border: var(--border);
+			padding: 0;
+
+			img {
+				inline-size: 100%;
+				max-inline-size: 10rem;
+				block-size: auto;
+				aspect-ratio: 16 / 9;
+				object-fit: cover;
+			}
+		}
+
+		:modal {
+			display: grid;
+			grid-template-columns: 1fr;
+			grid-template-rows: 3rem auto;
+			max-block-size: 95dvh;
+			min-inline-size: 80dvw;
+			padding: 0;
+			border: 4px solid var(--colour-border);
+
+			&:focus,
+			&:focus-visible {
+				outline: none;
+			}
+
+			@media (width > 40rem) {
+				grid-template-columns: 60% 1fr;
+
+				nav,
+				aside {
+					grid-column: 2;
+				}
+
+				nav {
+					grid-row: 1;
+				}
+
+				img {
+					grid-column: 1;
+					grid-row: span 2;
+
+					border-inline-end: 4px solid var(--colour-border);
+				}
+			}
+
+			nav {
+				display: flex;
+				justify-content: space-between;
+				background-color: var(--colour-blue-darker);
+			}
+
+			button {
+				display: flex;
+				flex-direction: column;
+				block-size: 100%;
+				aspect-ratio: 1 / 1;
+				background-color: var(--colour-blue-dark);
+				border: none;
+				color: var(--colour-text-inverse);
+				place-content: center;
+				place-items: center;
+
+				&[command="--previous"] {
+					transform: rotate(180deg);
+				}
+
+				&[command="close"] {
+					background-color: var(--colour-focus);
+
+					&:hover,
+					&:focus-visible {
+						background-color: var(--colour-blue-light);
+						color: var(--colour-text);
+					}
+				}
+
+				&:hover,
+				&:focus-visible {
+					background-color: var(--colour-focus);
+					outline: none;
+				}
+			}
+
+			img {
+				inline-size: 100%;
+				max-block-size: 90dvh;
+				object-fit: contain;
+				background-color: var(--colour-border);
+			}
+
+			aside {
+				border-block-start: 4px solid var(--colour-border);
+			}
+
+			&::backdrop {
+				background-color: rgba(0, 0, 0, 0.8);
+			}
+		}
+	}
+</style>
+
+<script>
+	// Function: Handle modal navigation
+	const modalNavigation = (
+		direction: string,
+		id: string,
+		currentModal: HTMLDialogElement,
+	) => {
+		if (direction === "next") {
+			// Find next dialog in list
+			const nextID = `image-${parseInt(id.split("-")[1]) + 1}`;
+			const nextModal = document.getElementById(nextID) as HTMLDialogElement;
+
+			if (nextModal) {
+				currentModal.close();
+				nextModal.showModal();
+			}
+		} else if (direction === "prev") {
+			// Find previous dialog in list
+			const prevID = `image-${parseInt(id.split("-")[1]) - 1}`;
+			const prevModal = document.getElementById(prevID) as HTMLDialogElement;
+
+			if (prevModal) {
+				currentModal.close();
+				prevModal.showModal();
+			}
+		}
+	};
+
+	// Attach function to all modals
+	const modals = document.querySelectorAll("dialog");
+
+	modals.forEach((modal) => {
+		// Event: Next/previous button clicks for navigating between modals
+		modal.addEventListener("command", (event) => {
+			if (!event.target) return;
+
+			// Calculate IDs for all available targets
+			const id = modal.id;
+			const nextID = `image-${parseInt(id.split("-")[1]) + 1}`;
+			const prevID = `image-${parseInt(id.split("-")[1]) - 1}`;
+
+			if (event.command === "--next" && nextID) {
+				modalNavigation("next", id, modal);
+			} else if (event.command === "--previous" && prevID) {
+				modalNavigation("prev", id, modal);
+			}
+		});
+
+		// Event: Keyboard navigation for modals
+		modal.addEventListener("keydown", (event) => {
+			if (event.key === "ArrowRight") {
+				modalNavigation("next", modal.id, modal);
+			} else if (event.key === "ArrowLeft") {
+				modalNavigation("prev", modal.id, modal);
+			}
+		});
+	});
+</script>

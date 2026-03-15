@@ -2,11 +2,10 @@
 import { getCollection } from "astro:content";
 import Global from "../layouts/Global.astro";
 import Arrow from "../assets/ArrowIcon.svg";
-import { formatDate } from "../utilities/formatDate";
 import BlogCard from "../components/BlogCard.astro";
 
 const blogs = (await getCollection("blog")).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
 // Total pages
@@ -45,7 +44,7 @@ const pageCount = Math.ceil(blogs.length / 9);
 	// Function: initialise pagination
 	const initPagination = (
 		pagination: Element | null,
-		posts: NodeListOf<Element>
+		posts: NodeListOf<Element>,
 	) => {
 		if (!pagination) return false;
 
@@ -58,7 +57,7 @@ const pageCount = Math.ceil(blogs.length / 9);
 
 		// Set aria-current on current page button
 		const pageButtons = pagination.querySelectorAll(
-			"ol button"
+			"ol button",
 		) as NodeListOf<HTMLButtonElement>;
 		pageButtons.forEach((button, index) => {
 			if (index === pageIndex) {
@@ -86,7 +85,7 @@ const pageCount = Math.ceil(blogs.length / 9);
 	// Get elements
 	const posts = document.querySelectorAll("#blog-posts > li");
 	const pagination = document.querySelector(
-		"nav[aria-label='Blog pagination']"
+		"nav[aria-label='Blog pagination']",
 	);
 
 	// Initiate pagination
@@ -94,7 +93,7 @@ const pageCount = Math.ceil(blogs.length / 9);
 
 	// Get pagination buttons
 	const pageButtons = pagination?.querySelectorAll(
-		"ol button"
+		"ol button",
 	) as NodeListOf<HTMLButtonElement>;
 	const prevButton = pagination?.querySelector(".prev");
 	const nextButton = pagination?.querySelector(".next");
@@ -125,12 +124,12 @@ const pageCount = Math.ceil(blogs.length / 9);
 	// Function: previous button
 	prevButton?.addEventListener("click", () => {
 		const currentPageButton = document.querySelector(
-			"ol button[aria-current='true']"
+			"ol button[aria-current='true']",
 		);
 		if (!currentPageButton) return;
 
 		const currentPageIndex = Array.from(pageButtons || []).indexOf(
-			currentPageButton as HTMLButtonElement
+			currentPageButton as HTMLButtonElement,
 		);
 		if (currentPageIndex > 0) {
 			pageButtons?.[currentPageIndex - 1]?.click();
@@ -140,12 +139,12 @@ const pageCount = Math.ceil(blogs.length / 9);
 	// Function: next button
 	nextButton?.addEventListener("click", () => {
 		const currentPageButton = document.querySelector(
-			"ol button[aria-current='true']"
+			"ol button[aria-current='true']",
 		);
 		if (!currentPageButton) return;
 
 		const currentPageIndex = Array.from(pageButtons || []).indexOf(
-			currentPageButton as HTMLButtonElement
+			currentPageButton as HTMLButtonElement,
 		);
 
 		if (currentPageIndex < pageButtons.length - 1) {

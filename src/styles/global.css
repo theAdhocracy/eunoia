@@ -89,6 +89,10 @@ blockquote {
 	}
 }
 
+body:has(:modal) {
+	overflow: hidden;
+}
+
 /* TODO: I know that captions were centred, but still need to design the rest of the figure layout */
 figcaption {
 	text-align: center;

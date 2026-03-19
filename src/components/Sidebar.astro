@@ -260,8 +260,10 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		flex-grow: 1;
 
 		h2 {
-			font-size: 1rem;
+			max-width: 37ch;
 			margin-block-end: 0.5em;
+			margin-inline: auto;
+			font-size: 1rem;
 		}
 
 		a:hover,
@@ -344,7 +346,7 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 			border-block-start: 1px solid var(--colour-blue-light);
 		}
 
-		article > p:first-of-type {
+		article > p {
 			font-size: 0.9rem;
 			max-width: 39ch;
 
@@ -352,6 +354,10 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 				color: var(--colour-blue-light);
 				padding-inline-end: 0.25rem;
 			}
+		}
+
+		p + p {
+			margin-block-start: 0.5rem;
 		}
 
 		footer {
@@ -509,6 +515,10 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 	.archives {
 		padding-block: 1rem;
 
+		h2 {
+			max-width: 100%;
+		}
+
 		ol {
 			--gutter: 0;
 
@@ -550,6 +560,43 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 			window.location.href = `/search?search=${encodeURIComponent(query)}`;
 		}
 	});
+
+	// Function: Latest thoughts
+	const setLatestThoughts = (maxDate: string) => {
+		// Filter thoughts to most recent before maxDate
+		const filteredThoughts = thoughtsData.filter(
+			(thought: any) => thought.date.html <= maxDate,
+		);
+
+		// Update DOM
+		const thoughtContainers =
+			yourThoughtsContainer?.querySelectorAll("article");
+
+		thoughtContainers?.forEach((container, index) => {
+			// Extract data from API response
+			const thought = filteredThoughts[filteredThoughts.length - 1 - index];
+
+			// Select DOM nodes to update
+			const link = container.querySelector("footer a");
+			const date = container.querySelector("footer time");
+			const content = container.querySelector("p:first-child");
+
+			if (thought && content && date && link) {
+				content.innerHTML = thought.comment;
+				link.setAttribute("href", `/thoughts#${thought.id}`);
+				date.setAttribute("datetime", thought.date.html);
+				date.textContent = thought.date.datetime;
+			}
+		});
+	};
+
+	// Thoughts initial state
+	const yourThoughtsContainer = document.querySelector(".chat-widget");
+	const thoughtsData = await fetch("/api/thoughts.json")
+		.then((res) => res.json())
+		.then((data) => data.index);
+
+	setLatestThoughts(maxDate);
 
 	// Function: Photo of the day
 	const setFeaturedPhoto = (maxDate: string, sessionPhoto?: any) => {

@@ -336,7 +336,8 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		}
 
 		article {
-			max-width: fit-content;
+			min-inline-size: min(100%, 35ch);
+			max-inline-size: fit-content;
 			margin-inline: auto;
 		}
 
@@ -348,7 +349,7 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 
 		article > p {
 			font-size: 0.9rem;
-			max-width: 39ch;
+			max-inline-size: 39ch;
 
 			span {
 				color: var(--colour-blue-light);
@@ -564,9 +565,10 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 	// Function: Latest thoughts
 	const setLatestThoughts = (maxDate: string) => {
 		// Filter thoughts to most recent before maxDate
-		const filteredThoughts = thoughtsData.filter(
-			(thought: any) => thought.date.html <= maxDate,
-		);
+		const filteredThoughts = thoughtsData
+			.filter((thought: any) => thought.date.html <= maxDate)
+			.sort((a: any, b: any) => (a.date.html < b.date.html ? 1 : -1))
+			.slice(0, 3); // Get the latest 3 thoughts
 
 		// Update DOM
 		const thoughtContainers =
@@ -574,18 +576,21 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 
 		thoughtContainers?.forEach((container, index) => {
 			// Extract data from API response
-			const thought = filteredThoughts[filteredThoughts.length - 1 - index];
+			const thought = filteredThoughts[index];
 
 			// Select DOM nodes to update
-			const link = container.querySelector("footer a");
-			const date = container.querySelector("footer time");
-			const content = container.querySelector("p:first-child");
+			const footer = container
+				.querySelector("footer")
+				?.cloneNode(true) as HTMLElement; // save footer
+			const link = footer?.querySelector("a");
+			const date = footer?.querySelector("time");
 
-			if (thought && content && date && link) {
-				content.innerHTML = thought.comment;
+			if (thought && footer && date && link) {
+				container.innerHTML = thought.comment;
 				link.setAttribute("href", `/thoughts#${thought.id}`);
 				date.setAttribute("datetime", thought.date.html);
 				date.textContent = thought.date.datetime;
+				container.appendChild(footer); // Re-append footer after replacing content
 			}
 		});
 	};
@@ -669,9 +674,9 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 	window.addEventListener(
 		"dateChange",
 		(event: CustomEventInit<{ date: string }>) => {
-			console.log("Date change");
 			if (event.detail?.date) {
 				setFeaturedPhoto(event.detail.date);
+				setLatestThoughts(event.detail.date);
 			}
 		},
 	);

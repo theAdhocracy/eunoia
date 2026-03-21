@@ -567,7 +567,6 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		// Filter thoughts to most recent before maxDate
 		const filteredThoughts = thoughtsData
 			.filter((thought: any) => thought.date.html <= maxDate)
-			.sort((a: any, b: any) => (a.date.html < b.date.html ? 1 : -1))
 			.slice(0, 3); // Get the latest 3 thoughts
 
 		// Update DOM
@@ -587,7 +586,10 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 
 			if (thought && footer && date && link) {
 				container.innerHTML = thought.comment;
-				link.setAttribute("href", `/thoughts#${thought.id}`);
+				link.setAttribute(
+					"href",
+					`/thoughts?page=${thought.page}#chat-${thought.id}`,
+				);
 				date.setAttribute("datetime", thought.date.html);
 				date.textContent = thought.date.datetime;
 				container.appendChild(footer); // Re-append footer after replacing content

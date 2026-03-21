@@ -89,6 +89,10 @@ blockquote {
 	}
 }
 
+hr {
+	border: var(--border);
+}
+
 body:has(:modal) {
 	overflow: hidden;
 }

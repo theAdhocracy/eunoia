@@ -1,0 +1,95 @@
+---
+import { formatDate } from "../utilities/formatDate";
+
+const { comment, author, date: postDate, reply } = Astro.props;
+
+// Format date
+const date = formatDate(postDate);
+
+// Check for admin author
+const isAdmin =
+	author.toLowerCase() === "murray" || author.toLowerCase() === "mike";
+
+// Set avatar
+let avatar;
+switch (author.toLowerCase()) {
+	case "murray":
+		avatar = {
+			src: "/images/avatars/murray.jpg",
+			alt: "High contrast image of teenage Murray with a large fake, curly moustache superimposed.",
+		};
+		break;
+	case "mike":
+		avatar = {
+			src: "/images/avatars/mike.jpg",
+			alt: "High contrast image of teenage Mike, looking up to the right with hands clasped in front of his face in mock thoughtfulness.",
+		};
+		break;
+	default:
+		avatar = {
+			src: "/images/avatars/default.png",
+			alt: "",
+		};
+}
+---
+
+<aside
+	class="thought"
+	data-layout="content"
+	data-admin={isAdmin ? "true" : "false"}
+>
+	<header>
+		<h3>{author} {reply ? "replies" : "says"}:</h3>
+		<time datetime={date.html}>{date.datetime}</time>
+		<img src={avatar.src} alt={avatar.alt} />
+	</header>
+	<Fragment set:html={comment} />
+</aside>
+
+<style>
+	.thought {
+		--gutter: 0.5em;
+
+		block-size: max-content;
+		inline-size: 80%;
+		padding: 0.5rem 1rem 1rem;
+		border: 2px solid var(--colour-border);
+
+		header {
+			display: grid;
+			grid-template-columns: max-content 1fr;
+			gap: 0 1rem;
+			margin-block-end: 0.5rem;
+
+			img {
+				grid-column: 1;
+				grid-row: 1 / 3;
+
+				max-block-size: 3rem;
+				padding: 0.125rem;
+				border: 1px solid var(--colour-grey-lighter);
+			}
+
+			h3 {
+				grid-row: 1;
+				font-size: 1.1rem;
+				align-self: end;
+			}
+
+			time {
+				text-wrap: balance;
+				font-size: 0.75rem;
+				color: var(--colour-highlight);
+			}
+		}
+
+		&[data-admin="true"] {
+			border-color: var(--colour-blue-mid);
+			justify-self: end;
+		}
+
+		&[data-reply="true"] {
+			margin-inline-start: var(--reply-margin, 1.5rem);
+		}
+	}
+</style>

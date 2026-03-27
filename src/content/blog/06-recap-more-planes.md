@@ -10,8 +10,7 @@ description: "We've finally prised a few pieces of content from our mobile phone
 
 So we’ve finally managed to get some of the photos and videos off our phones. Still got quite a few stuck on there but hopefully those will be coming soon as well. If you haven’t seen it, head on over to the new album to check out the pics:
 
-TODO: Add link to album
-<a href="/gallery/st-maarten-phonage">JFK/St. Maarten Phonage</a>
+<a href="/gallery/st-maarten-jfk-phonage">JFK/St. Maarten Phonage</a>
 
 So how about some videos as well? Lets see if this works:
 

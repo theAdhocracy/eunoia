@@ -1,0 +1,229 @@
+---
+import { getCollection } from "astro:content";
+import Global from "../layouts/Global.astro";
+import Arrow from "../assets/ArrowIcon.svg";
+import Thought from "../components/Thought.astro";
+
+const collection = await getCollection("chat");
+const chat = collection.sort((a, b) => b.data.date.localeCompare(a.data.date));
+
+// Total pages
+const pageCount = Math.ceil(chat.length / 25);
+
+// TODO: Integrate "Tweets" (here going to be Thoughts, rather than existing import of Chat)
+//		- May need to work out a way to combine them in the header into one date sorted stream
+//		- These should definitely be more heavily styled, more akin to a tweet somehow
+// NTS: Mike definitely had a Twitter account. Not sure if its possible to extract them though
+---
+
+<Global title="Thoughts">
+	<h1>Thoughts</h1>
+	<p><em>The comment form has now been disabled.</em></p>
+	<hr />
+	<ol id="thoughts" role="list">
+		{
+			chat.map(async (thought) => {
+				return (
+					<li id={`chat-${thought.id}`}>
+						<Thought {...thought.data} />
+					</li>
+				);
+			})
+		}
+	</ol>
+	<nav aria-label="Thought pagination" hidden>
+		<button class="prev" type="button"><Arrow /> previous</button>
+		<ol role="list">
+			{
+				pageCount > 1 &&
+					Array.from({ length: pageCount }).map((_, index) => (
+						<li>
+							<button type="button">
+								<span class="sr-only">Page </span>
+								{index + 1}
+							</button>
+						</li>
+					))
+			}
+		</ol>
+		<button class="next" type="button">next <Arrow /></button>
+	</nav>
+</Global>
+
+<script>
+	// Function: initialise pagination
+	const initPagination = (
+		pagination: Element | null,
+		posts: NodeListOf<Element>,
+	) => {
+		if (!pagination) return false;
+
+		const currentPage =
+			new URL(window.location.href).searchParams.get("page") || "1";
+		const pageIndex = parseInt(currentPage) - 1;
+
+		// Show pagination
+		pagination.removeAttribute("hidden");
+
+		// Set aria-current on current page button
+		const pageButtons = pagination.querySelectorAll(
+			"ol button",
+		) as NodeListOf<HTMLButtonElement>;
+		pageButtons.forEach((button, index) => {
+			if (index === pageIndex) {
+				button.setAttribute("aria-current", "true");
+			}
+		});
+
+		// Hide all posts except the chosen page
+		posts.forEach((post, postIndex) => {
+			if (!(postIndex >= pageIndex * 25 && postIndex < (pageIndex + 1) * 25)) {
+				post.setAttribute("hidden", "");
+			}
+		});
+
+		return true;
+	};
+
+	// Function: update URL with selected page
+	const paginateURL = (pageIndex: number) => {
+		const url = new URL(window.location.href);
+		url.searchParams.set("page", (pageIndex + 1).toString());
+		window.history.replaceState({}, "", url.toString());
+	};
+
+	// Get elements
+	const posts = document.querySelectorAll("#thoughts > li");
+	const pagination = document.querySelector(
+		"nav[aria-label='Thought pagination']",
+	);
+
+	// Initiate pagination
+	const paginationInitiated = initPagination(pagination, posts);
+
+	// Get pagination buttons
+	const pageButtons = pagination?.querySelectorAll(
+		"ol button",
+	) as NodeListOf<HTMLButtonElement>;
+	const prevButton = pagination?.querySelector(".prev");
+	const nextButton = pagination?.querySelector(".next");
+
+	// Function: pagination (page) buttons
+	if (paginationInitiated && pageButtons) {
+		pageButtons.forEach((button, pageIndex) => {
+			button.addEventListener("click", () => {
+				// Update aria-current
+				pageButtons.forEach((btn) => btn.removeAttribute("aria-current"));
+				button.setAttribute("aria-current", "true");
+
+				// Show/hide posts
+				posts.forEach((post, postIndex) => {
+					if (postIndex >= pageIndex * 25 && postIndex < (pageIndex + 1) * 25) {
+						post.removeAttribute("hidden");
+					} else {
+						post.setAttribute("hidden", "");
+					}
+				});
+
+				// Update URL
+				paginateURL(pageIndex);
+			});
+		});
+	}
+
+	// Function: previous button
+	prevButton?.addEventListener("click", () => {
+		const currentPageButton = document.querySelector(
+			"ol button[aria-current='true']",
+		);
+		if (!currentPageButton) return;
+
+		const currentPageIndex = Array.from(pageButtons || []).indexOf(
+			currentPageButton as HTMLButtonElement,
+		);
+		if (currentPageIndex > 0) {
+			pageButtons?.[currentPageIndex - 1]?.click();
+		}
+	});
+
+	// Function: next button
+	nextButton?.addEventListener("click", () => {
+		const currentPageButton = document.querySelector(
+			"ol button[aria-current='true']",
+		);
+		if (!currentPageButton) return;
+
+		const currentPageIndex = Array.from(pageButtons || []).indexOf(
+			currentPageButton as HTMLButtonElement,
+		);
+
+		if (currentPageIndex < pageButtons.length - 1) {
+			pageButtons?.[currentPageIndex + 1]?.click();
+		}
+	});
+</script>
+
+<style>
+	#thoughts {
+		flex-direction: column;
+		flex-wrap: nowrap; /* stops a visual bug on one-line comments */
+
+		li {
+			display: grid;
+		}
+	}
+
+	nav {
+		display: flex;
+		justify-content: center;
+		gap: 1.5rem;
+		margin-block: 1rem 2rem;
+
+		ol {
+			--gutter: 0.5rem;
+			justify-content: center;
+
+			button {
+				width: 2rem;
+				padding: 0.5rem;
+				aspect-ratio: 1 / 1;
+				background-color: var(--colour-grey-light);
+				border: none;
+				color: var(--colour-text);
+				white-space: nowrap;
+
+				&:hover,
+				&:focus-visible {
+					background-color: var(--colour-focus);
+					color: var(--colour-background);
+				}
+
+				&[aria-current="true"] {
+					color: var(--colour-blue-mid);
+				}
+			}
+		}
+
+		.prev,
+		.next {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			height: 2rem;
+			background-color: transparent;
+			border: none;
+			color: var(--colour-text);
+			white-space: nowrap;
+			font-size: 0.9rem;
+
+			&:hover,
+			&:focus-visible {
+				color: var(--colour-focus);
+			}
+		}
+
+		.prev svg {
+			transform: rotate(180deg);
+		}
+	}
+</style>

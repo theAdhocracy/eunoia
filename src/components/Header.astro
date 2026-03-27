@@ -593,26 +593,15 @@ import Arrow from "../assets/ArrowIcon.svg";
 		updateThemePicker(theme);
 	});
 
-	// ** Mutations **
+	// ** Events **
 
-	// Mutation: Listen for changes in the data-date attribute and update map accordingly
-	const dateObserver = new MutationObserver((mutationsList) => {
-		mutationsList.forEach((mutation) => {
-			if (mutation.type === "attributes") {
-				if (mutation.attributeName === "data-date") {
-					if (body.dataset.date) {
-						updateMap(new Date(body.dataset.date), maps, location);
-					}
-					// TODO: Fetch new thoughts data for the selected date
-					// Unsure exactly how to do this, but it should be possible to get Astro to build a folder of JSON files for each thought, and retrieve them that way. Not quite an API, but similar, and should work statically via a fetch request.
-					// May be worth moving this into a separate script file and calling into the head.
-					// Also consider removing the default data e.g. map and thoughts until a date is selected; loading spinners may be preferable.
-					// UPDATE: see how the sidebar is working, this can be shifted there. Also may want to update this to use the custom trigger, rather than a DOM mutation
-				}
+	// Event: Custom date change event; update map accordingly
+	window.addEventListener(
+		"dateChange",
+		(event: CustomEventInit<{ date: string }>) => {
+			if (event.detail?.date) {
+				updateMap(new Date(event.detail.date), maps, location);
 			}
-		});
-	});
-
-	// Attach mutations to relevant elements
-	dateObserver.observe(body, { attributes: true });
+		},
+	);
 </script>

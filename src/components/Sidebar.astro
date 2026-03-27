@@ -3,8 +3,6 @@ import { getCollection } from "astro:content";
 import Arrow from "../assets/ArrowIcon.svg";
 import { formatDate } from "../utilities/formatDate";
 
-// TODO: Based on the About Us page, there was maybe some kind of guestbook or comment feed on the sidebar, called Your Thoughts? Do I want that? Had further confirmation from a blog post or two as well. Definitely seems to have existed. FOUND IT! They are stored as comments, just not associated with any post. I have pulled out the full set from the database and stored them in an Excel file (unsorted backup)
-
 // Latest Thought
 // TODO: Fetch thoughts based on collection published date and current date, adjusted for year. Should update in "real time". Can be random instead if that is too hard.
 const latestThought = {
@@ -18,29 +16,26 @@ const latestThought = {
 
 const thoughtDate = formatDate(latestThought.date);
 
-// Recent Comments
-// TODO: Fetch recent comments from the comments collection, limited to 3.
+// Your Thoughts
+// Initial loading state (before JS runs)
 const comments = [
 	{
-		id: "001",
-		author: "MumJo",
-		content:
-			"Some random thought that we said once 😛 And then there was some more. Up to 120 characters, at the time.",
-		date: "2009-05-13T12:45",
+		id: "chat-4",
+		author: "Author",
+		content: "Loading...",
+		date: "2009-03-25T13:37",
 	},
 	{
-		id: "002",
-		author: "Adrian",
-		content:
-			"Some random thought that we said once 😛 And then there was some more. Up to 120 characters, at the time.",
-		date: "2009-05-13T12:45",
+		id: "chat-3",
+		author: "Author",
+		content: "Loading...",
+		date: "2009-03-01T09:18",
 	},
 	{
-		id: "003",
-		author: "Murray",
-		content:
-			"Some random thought that we said once 😛 And then there was some more. Up to 120 characters, at the time.",
-		date: "2009-05-13T12:45",
+		id: "chat-1",
+		author: "Author",
+		content: "Loading...",
+		date: "2009-02-04T20:00",
 	},
 ];
 

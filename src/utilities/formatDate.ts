@@ -1,4 +1,4 @@
-export const formatDate = (date: Date | string) => {
+export const formatDate = (date: Date | string, hasISO: boolean = false) => {
 	// HTML attribute
 	const html = new Intl.DateTimeFormat("sv-SE")
 		.format(new Date(date))
@@ -34,6 +34,22 @@ export const formatDate = (date: Date | string) => {
 		.toString()
 		.replace(" AM", " am")
 		.replace(" PM", " pm");
+
+	// ISO
+	if (hasISO) {
+		const iso = new Date(date).toISOString();
+		const isoSplit = iso.split("T");
+		const isoMini = `${isoSplit[0]} ${isoSplit[1].slice(0, 5)}`;
+
+		return {
+			html: html,
+			formatted: formatted,
+			datetime: datetime,
+			short: short,
+			iso: iso,
+			isoMini: isoMini,
+		};
+	}
 
 	return {
 		html: html,

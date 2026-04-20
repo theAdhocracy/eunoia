@@ -66,4 +66,8 @@ const chat = defineCollection({
 	loader: file("./src/content/thoughts/chat.json"),
 });
 
-export const collections = { blog, comments, albums, chat };
+const tweets = defineCollection({
+	loader: file("./src/content/thoughts/tweets.json"),
+});
+
+export const collections = { blog, comments, albums, chat, tweets };

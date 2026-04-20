@@ -3,12 +3,19 @@ import { getCollection } from "astro:content";
 import Global from "../layouts/Global.astro";
 import Arrow from "../assets/ArrowIcon.svg";
 import Thought from "../components/Thought.astro";
+import Tweet from "../components/Tweet.astro";
 
-const collection = await getCollection("chat");
-const chat = collection.sort((a, b) => b.data.date.localeCompare(a.data.date));
+// Get data from content collections
+const chat = await getCollection("chat");
+const tweets = await getCollection("tweets");
+
+// Combine into a single array
+const thoughts = [...chat, ...tweets].sort((a, b) =>
+	b.data.date.localeCompare(a.data.date),
+);
 
 // Total pages
-const pageCount = Math.ceil(chat.length / 25);
+const pageCount = Math.ceil(thoughts.length / 25);
 
 // TODO: Integrate "Tweets" (here going to be Thoughts, rather than existing import of Chat)
 //		- May need to work out a way to combine them in the header into one date sorted stream
@@ -22,10 +29,14 @@ const pageCount = Math.ceil(chat.length / 25);
 	<hr />
 	<ol id="thoughts" role="list">
 		{
-			chat.map(async (thought) => {
+			thoughts.map(async (thought) => {
 				return (
-					<li id={`chat-${thought.id}`}>
-						<Thought {...thought.data} />
+					<li id={`thought-${thought.id}`}>
+						{thought.data.type === "tweet" ? (
+							<Tweet {...thought.data} />
+						) : (
+							<Thought {...thought.data} />
+						)}
 					</li>
 				);
 			})
@@ -170,6 +181,11 @@ const pageCount = Math.ceil(chat.length / 25);
 
 		li {
 			display: grid;
+		}
+
+		:target aside {
+			outline: 2px solid var(--colour-border);
+			outline-offset: 2px;
 		}
 	}
 

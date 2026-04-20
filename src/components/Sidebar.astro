@@ -4,14 +4,12 @@ import Arrow from "../assets/ArrowIcon.svg";
 import { formatDate } from "../utilities/formatDate";
 
 // Latest Thought
-// TODO: Fetch thoughts based on collection published date and current date, adjusted for year. Should update in "real time". Can be random instead if that is too hard.
 const latestThought = {
-	id: "001",
-	author: "Murray",
-	handle: "@gnortherngnome",
-	content:
-		"Some random thought that we said once 😛 And then there was some more. Up to 120 characters, at the time.",
-	date: "2009-05-13T12:45",
+	id: "thought-1",
+	author: "Author",
+	handle: "@loading",
+	content: "Loading...",
+	date: "2009-03-25T13:37",
 };
 
 const thoughtDate = formatDate(latestThought.date);
@@ -147,6 +145,11 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		}
 	</section>
 	<section class="social-widget">
+		<svg viewBox="0 0 248 204" aria-hidden="true">
+			<path
+				d="M221.95 51.29c.15 2.17.15 4.34.15 6.53 0 66.73-50.8 143.69-143.69 143.69v-.04c-27.44.04-54.31-7.82-77.41-22.64 3.99.48 8 .72 12.02.73 22.74.02 44.83-7.61 62.72-21.66-21.61-.41-40.56-14.5-47.18-35.07 7.57 1.46 15.37 1.16 22.8-.87-23.56-4.76-40.51-25.46-40.51-49.5v-.64c7.02 3.91 14.88 6.08 22.92 6.32C11.58 63.31 4.74 33.79 18.14 10.71c25.64 31.55 63.47 50.73 104.08 52.76-4.07-17.54 1.49-35.92 14.61-48.25 20.34-19.12 52.33-18.14 71.45 2.19 11.31-2.23 22.15-6.38 32.07-12.26-3.77 11.69-11.66 21.62-22.2 27.93 10.01-1.18 19.79-3.86 29-7.95-6.78 10.16-15.32 19.01-25.2 26.16z"
+			></path>
+		</svg>
 		<h2>Our Thoughts</h2>
 		<article>
 			<p>{latestThought.content}</p>
@@ -163,6 +166,7 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 						{thoughtDate.datetime}
 					</time>
 				</p>
+				<img src="/images/avatars/default.png" alt="" />
 			</footer>
 		</article>
 	</section>
@@ -384,6 +388,12 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		background-color: var(--colour-blue-mid);
 		color: var(--colour-blue-light);
 
+		& > svg {
+			max-inline-size: 1.25rem;
+			float: right;
+			margin-inline-end: 0.35rem;
+		}
+
 		h2 {
 			color: inherit;
 			margin-block-end: 1rem;
@@ -392,6 +402,7 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		article {
 			max-width: fit-content;
 			margin-inline: auto;
+			clear: both;
 		}
 
 		article > p:first-of-type {
@@ -413,9 +424,16 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		footer {
 			--gutter: 0;
 
+			display: grid;
+			grid-template-columns: 1fr max-content;
+			gap: 0 0.5rem;
 			margin-block-start: 1rem;
 			text-align: end;
 			font-size: 0.8rem;
+
+			p:has(a) {
+				align-self: end;
+			}
 
 			a {
 				text-decoration: none;
@@ -424,6 +442,13 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 
 			time {
 				color: var(--colour-white);
+			}
+
+			img {
+				grid-row: 1 / 3;
+				grid-column: 2;
+				max-inline-size: 2.5rem;
+				border: 1px solid var(--colour-border);
 			}
 		}
 	}
@@ -441,12 +466,13 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		}
 
 		figure {
-			max-inline-size: fit-content;
+			max-inline-size: 20rem;
 			margin: 0;
 			margin-inline: auto;
 		}
 
 		img {
+			margin-inline: auto;
 			border: 2px solid var(--colour-border);
 			background-image: url("/images/favicon.png");
 			background-repeat: no-repeat;
@@ -557,20 +583,19 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		}
 	});
 
-	// Function: Latest thoughts
-	const setLatestThoughts = (maxDate: string) => {
-		// Filter thoughts to most recent before maxDate
-		const filteredThoughts = thoughtsData
-			.filter((thought: any) => thought.date.html <= maxDate)
-			.slice(0, 3); // Get the latest 3 thoughts
+	// Function: Latest chats
+	const setLatestChats = (maxDate: string) => {
+		// Filter chats to most recent before maxDate
+		const filteredChats = chatData
+			.filter((chat: any) => chat.date.html <= maxDate)
+			.slice(0, 3); // Get the latest 3 chats
 
 		// Update DOM
-		const thoughtContainers =
-			yourThoughtsContainer?.querySelectorAll("article");
+		const chatContainers = chatContainer?.querySelectorAll("article");
 
-		thoughtContainers?.forEach((container, index) => {
+		chatContainers?.forEach((container, index) => {
 			// Extract data from API response
-			const thought = filteredThoughts[index];
+			const chat = filteredChats[index];
 
 			// Select DOM nodes to update
 			const footer = container
@@ -579,26 +604,67 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 			const link = footer?.querySelector("a");
 			const date = footer?.querySelector("time");
 
-			if (thought && footer && date && link) {
-				container.innerHTML = thought.comment;
+			if (chat && footer && date && link) {
+				container.innerHTML = chat.comment;
 				link.setAttribute(
 					"href",
-					`/thoughts?page=${thought.page}#chat-${thought.id}`,
+					`/thoughts?page=${chat.page}#thought-${chat.id}`,
 				);
-				date.setAttribute("datetime", thought.date.html);
-				date.textContent = thought.date.datetime;
+				date.setAttribute("datetime", chat.date.html);
+				date.textContent = chat.date.datetime;
 				container.appendChild(footer); // Re-append footer after replacing content
 			}
 		});
 	};
 
-	// Thoughts initial state
-	const yourThoughtsContainer = document.querySelector(".chat-widget");
-	const thoughtsData = await fetch("/api/thoughts.json")
+	// Chats initial state
+	const chatContainer = document.querySelector(".chat-widget");
+	const chatData = await fetch("/api/chat.json")
 		.then((res) => res.json())
 		.then((data) => data.index);
 
-	setLatestThoughts(maxDate);
+	setLatestChats(maxDate);
+
+	// Function: Latest thought (Tweet)
+	const setLatestThought = (maxDate: string) => {
+		// Get most recent thought before maxDate
+		const latest = thoughtData.filter(
+			(thought: any) => thought.date.html <= maxDate,
+		)[0];
+
+		// Update DOM
+		if (latest) {
+			const thoughtContainer = document.querySelector(".social-widget article");
+			const link = thoughtContainer?.querySelector("footer a");
+			const date = thoughtContainer?.querySelector("footer time");
+
+			if (link && date && thoughtContainer) {
+				thoughtContainer.querySelector("p")!.textContent = latest.comment;
+				link.setAttribute(
+					"href",
+					`/thoughts?page=${latest.page}#thought-${latest.id}`,
+				);
+				link.childNodes[0].textContent = latest.author; // update author text node
+				date.setAttribute("datetime", latest.date.html);
+				date.textContent = latest.date.datetime;
+
+				// Update image
+				const image = thoughtContainer.querySelector("img");
+				image?.setAttribute("src", "/images/avatars/murray.jpg");
+				image?.setAttribute(
+					"alt",
+					"High contrast image of teenage Murray with a large fake, curly moustache superimposed.",
+				);
+			}
+		}
+	};
+
+	// Latest thought initial state
+	const thoughtData = await fetch("/api/thoughts.json")
+		.then((res) => res.json())
+		.then((data) => data.index);
+
+	setLatestThought(maxDate);
 
 	// Function: Photo of the day
 	const setFeaturedPhoto = (maxDate: string, sessionPhoto?: any) => {
@@ -673,7 +739,8 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 		(event: CustomEventInit<{ date: string }>) => {
 			if (event.detail?.date) {
 				setFeaturedPhoto(event.detail.date);
-				setLatestThoughts(event.detail.date);
+				setLatestChats(event.detail.date);
+				setLatestThought(event.detail.date);
 			}
 		},
 	);

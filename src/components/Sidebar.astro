@@ -690,7 +690,7 @@ words.splice(0, words.length, ...sortedWords.filter(Boolean));
 
 			// Set photo data
 			photo = {
-				src: randomPhoto.url,
+				src: randomPhoto.image.src,
 				alt: randomPhoto.alt || "",
 				caption: randomPhoto.caption || "",
 				url: `/gallery/${randomAlbum.slug}`,

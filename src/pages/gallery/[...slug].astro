@@ -94,13 +94,13 @@ const pagination = {
 			images && images.length > 0 && (
 				<section class="image-grid">
 					<ol role="list">
-						{images.map((image, index) => {
-							const { url, caption } = image;
+						{images.map((item, index) => {
+							const { image, caption } = item;
 
 							return (
 								<li>
 									<button command="show-modal" commandfor={`image-${index}`}>
-										<img src={url} alt="" />
+										<img src={image.src} alt="" />
 									</button>
 
 									<dialog id={`image-${index}`} closedby="any" autofocus>
@@ -130,7 +130,7 @@ const pagination = {
 												<Arrow />
 											</button>
 										</nav>
-										<img src={url} alt="" />
+										<img src={image.src} alt="" />
 										<aside>
 											{caption && <p>{caption}</p>}
 											{/* TODO: Consider adding Facebook comments, date taken, and other metadata */}

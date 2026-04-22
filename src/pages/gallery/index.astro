@@ -15,7 +15,7 @@ const albums = (await getCollection("albums")).sort(
 		albums.length > 0 && (
 			<section class="album-grid">
 				<ol role="list">
-					{albums.map((album, index) => {
+					{albums.map((album) => {
 						// Extract album data
 						const {
 							title,
@@ -28,7 +28,6 @@ const albums = (await getCollection("albums")).sort(
 						// Format data
 						const filepath = album.id;
 						const slug = formatAlbumSlug(filepath);
-						const image = `/src/content/albums/${filepath}/${thumbnail}`;
 
 						// Calculate total images
 						const total = images?.length ?? 0;
@@ -66,7 +65,7 @@ const albums = (await getCollection("albums")).sort(
 						return (
 							<li>
 								<article>
-									<img src={thumbnail ? image : ""} alt={""} />
+									<img src={thumbnail ? thumbnail.src : ""} alt={""} />
 									<div>
 										<header>
 											<DateBox date={datePub} />

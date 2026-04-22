@@ -37,17 +37,17 @@ const albums = defineCollection({
 	// Load Markdown and MDX files in the `src/content/albums/` directory.
 	loader: glob({ base: "./src/content/albums", pattern: "**/*.{md,mdx}" }),
 	// Type-check frontmatter using a schema
-	schema: () =>
+	schema: ({ image }) =>
 		z.object({
 			title: z.string(),
 			author: z.string(),
 			description: z.string().optional(),
 			date: z.coerce.date(),
-			thumbnail: z.string().optional(),
+			thumbnail: image().optional(),
 			images: z
 				.array(
 					z.object({
-						url: z.string(),
+						image: image(),
 						caption: z.string().optional(),
 						comments: z
 							.array(

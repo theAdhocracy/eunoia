@@ -40,18 +40,22 @@ const albums = defineCollection({
 	schema: ({ image }) =>
 		z.object({
 			title: z.string(),
+			date: z.coerce.date(),
 			author: z.string(),
 			description: z.string().optional(),
-			date: z.coerce.date(),
 			thumbnail: image().optional(),
 			images: z
 				.array(
 					z.object({
 						image: image(),
 						caption: z.string().optional(),
+						alt: z.string().optional(),
+						likes: z.number().optional(),
 						comments: z
 							.array(
 								z.object({
+									author: z.string(),
+									date: z.coerce.date(),
 									text: z.string(),
 								}),
 							)

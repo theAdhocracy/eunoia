@@ -3,7 +3,7 @@ title: "Mikes Bday and Randoms"
 date: 2009-03-10 03:37
 author: Murray
 description: "Starting on Mike's Bday and lasting up to yesterday (as of posting)"
-thumbnail: ""
+thumbnail: "./caribbean-mikes-bday-2009-0035.jpg"
 images:
   [
     {

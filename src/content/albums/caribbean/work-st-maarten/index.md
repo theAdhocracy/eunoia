@@ -3,7 +3,7 @@ title: "Work & St. Maarten"
 date: 2009-03-14 20:51
 author: Murray
 description: "Just some phone piks taken over the last few weeks"
-thumbnail: ""
+thumbnail: "./caribbean-work-2009-0036.jpg"
 images:
   [
     {

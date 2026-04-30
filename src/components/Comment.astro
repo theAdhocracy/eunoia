@@ -1,7 +1,14 @@
 ---
 import { formatDate } from "../utilities/formatDate";
 
-const { content, author, date: postDate, reply, replyLevel } = Astro.props;
+const {
+	content,
+	author,
+	date: postDate,
+	reply,
+	replyLevel,
+	type = "blog",
+} = Astro.props;
 
 // Format date
 const date = formatDate(postDate);
@@ -33,20 +40,43 @@ switch (author.toLowerCase()) {
 }
 ---
 
-<aside
-	class="comment"
-	data-layout="content"
-	data-admin={isAdmin ? "true" : "false"}
-	data-reply={reply ? "true" : "false"}
-	style={`--reply-margin: ${reply ? (replyLevel ? replyLevel : 1) * 1.5 : 0}rem;`}
->
-	<header>
-		<h3>{author} {reply ? "replies" : "says"}:</h3>
-		<time datetime={date.html}>{date.datetime}</time>
-		<img src={avatar.src} alt={avatar.alt} />
-	</header>
-	<Fragment set:html={content} />
-</aside>
+{
+	type === "blog" && (
+		<aside
+			class="comment"
+			data-layout="content"
+			data-admin={isAdmin ? "true" : "false"}
+			data-reply={reply ? "true" : "false"}
+			style={`--reply-margin: ${reply ? (replyLevel ? replyLevel : 1) * 1.5 : 0}rem;`}
+		>
+			<header>
+				<h3>
+					{author} {reply ? "replies" : "says"}:
+				</h3>
+				<time datetime={date.html}>{date.datetime}</time>
+				<img src={avatar.src} alt={avatar.alt} />
+			</header>
+			<Fragment set:html={content} />
+		</aside>
+	)
+}
+
+{
+	type === "photo" && (
+		<div
+			class="comment"
+			data-layout="content"
+			data-admin={isAdmin ? "true" : "false"}
+		>
+			<header>
+				<h3>{author}</h3>
+				<time datetime={date.html}>{date.datetime}</time>
+				<img src={avatar.src} alt={avatar.alt} />
+			</header>
+			<p>{content}</p>
+		</div>
+	)
+}
 
 <style>
 	.comment {

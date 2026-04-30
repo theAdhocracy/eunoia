@@ -1,4 +1,7 @@
 ---
+import exifr from "exifr";
+import fs from "fs/promises";
+
 import { getCollection } from "astro:content";
 import Global from "../../layouts/Global.astro";
 import Pagination from "../../components/Pagination.astro";
@@ -6,6 +9,7 @@ import { formatDate } from "../../utilities/formatDate";
 import { formatAlbumSlug } from "../../utilities/formatAlbumSlug";
 import Cross from "../../assets/CrossIcon.svg";
 import Arrow from "../../assets/ArrowIcon.svg";
+import Comment from "../../components/Comment.astro";
 
 // Determine valid album paths
 export async function getStaticPaths() {
@@ -94,8 +98,17 @@ const pagination = {
 			images && images.length > 0 && (
 				<section class="image-grid">
 					<ol role="list">
-						{images.map((item, index) => {
-							const { image, caption } = item;
+						{images.map(async (item, index) => {
+							const { image, caption, comments } = item;
+							const imagePath =
+								"src\\content\\albums\\new-york\\i-heart-ny\\new-york-i-heart-ny-2009-0001.jpg";
+
+							// Extract metadata
+							const imageBuffer = await fs.readFile(imagePath);
+							const exifDate = await exifr.parse(imageBuffer, ["CreateDate"]);
+
+							// Normalise date
+							const dateTaken = formatDate(exifDate.CreateDate);
 
 							return (
 								<li>
@@ -131,9 +144,43 @@ const pagination = {
 											</button>
 										</nav>
 										<img src={image.src} alt="" />
-										<aside>
+										<aside data-layout="content">
+											<header data-layout="content">
+												<p>
+													📷 {index + 1} of {images.length}
+												</p>
+												<p>
+													📅{" "}
+													<time datetime={dateTaken.html}>
+														{dateTaken.formatted}
+													</time>
+												</p>
+											</header>
 											{caption && <p>{caption}</p>}
-											{/* TODO: Consider adding Facebook comments, date taken, and other metadata */}
+
+											{/* <!-- Comments --> */}
+											{comments && comments.length > 0 && (
+												<section class="comments" data-layout="content">
+													<h2>Comments ({comments.length})</h2>
+													<ol role="list">
+														{comments.map((comment) => {
+															// Do not show empty comments
+															if (!comment.author) return null;
+
+															return (
+																<li>
+																	<Comment
+																		type="photo"
+																		author={comment.author}
+																		date={comment.date}
+																		content={comment.text}
+																	/>
+																</li>
+															);
+														})}
+													</ol>
+												</section>
+											)}
 										</aside>
 									</dialog>
 								</li>
@@ -148,7 +195,7 @@ const pagination = {
 
 <style>
 	.album {
-		header {
+		& > header {
 			clear: both;
 
 			h1 {
@@ -223,11 +270,16 @@ const pagination = {
 					grid-row: 1;
 				}
 
-				img {
+				& > img {
 					grid-column: 1;
 					grid-row: span 2;
 
 					border-inline-end: 4px solid var(--colour-border);
+				}
+
+				.comments ol {
+					max-block-size: 60dvh;
+					overflow: auto;
 				}
 			}
 
@@ -269,7 +321,7 @@ const pagination = {
 				}
 			}
 
-			img {
+			& > img {
 				inline-size: 100%;
 				max-block-size: 90dvh;
 				object-fit: contain;
@@ -277,7 +329,21 @@ const pagination = {
 			}
 
 			aside {
+				padding: 1rem max(1rem, 4vw);
 				border-block-start: 4px solid var(--colour-border);
+
+				header {
+					--gutter: 0.25rem;
+				}
+
+				.comments {
+					max-inline-size: 50ch;
+
+					ol,
+					li {
+						inline-size: 100%;
+					}
+				}
 			}
 
 			&::backdrop {

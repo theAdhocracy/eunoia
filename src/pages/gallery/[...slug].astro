@@ -100,15 +100,18 @@ const pagination = {
 					<ol role="list">
 						{images.map(async (item, index) => {
 							const { image, caption, comments } = item;
-							const imagePath =
-								"src\\content\\albums\\new-york\\i-heart-ny\\new-york-i-heart-ny-2009-0001.jpg";
+							const imagePath = image.src
+								.replace(/^.*\/src/, "src")
+								.replace(/\?orig.*$/, "");
 
 							// Extract metadata
 							const imageBuffer = await fs.readFile(imagePath);
-							const exifDate = await exifr.parse(imageBuffer, ["CreateDate"]);
+							const exifDate = await exifr.parse(imageBuffer, [
+								"DateTimeOriginal",
+							]);
 
 							// Normalise date
-							const dateTaken = formatDate(exifDate.CreateDate);
+							const dateTaken = formatDate(exifDate.DateTimeOriginal);
 
 							return (
 								<li>

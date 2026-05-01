@@ -1,5 +1,192 @@
 ---
 title: "Milford Sound Part 1"
-date: 2009-05-01 08:56
+date: 2009-05-01 08:55
 author: Murray
+description: ""
+thumbnail: "./new-zealand-milford-sound-2009-0016.jpg"
+images:
+  [
+    {
+      image: "./new-zealand-milford-sound-2009-0001.jpg",
+      caption: "First sites of Fiordland National Park",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0002.jpg",
+      caption: "",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0003.jpg",
+      caption: "Mirror Lakes with the clever sign",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0004.jpg",
+      caption: "Stupid ducks ruined the reflection",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0005.jpg",
+      caption: "",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0006.jpg",
+      caption: "Weird reflections",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0007.jpg",
+      caption: "Trout!",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0008.jpg",
+      caption: "Native beech forest",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0009.jpg",
+      caption: "Just one of thousands of waterfalls cascading from the granite slopes",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0010.jpg",
+      caption: "",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0011.jpg",
+      caption: "The clouds created some amazing effects with the scenery",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0012.jpg",
+      caption: "",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0013.jpg",
+      caption: "Huge mountain",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0014.jpg",
+      caption: "Glaciers around every corner",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0015.jpg",
+      caption: "The immense tunnel that connects two valleys",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0016.jpg",
+      caption: "What awaited on the other side of the tunnel",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0017.jpg",
+      caption: "",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0018.jpg",
+      caption: "Sam and Diesel on the bus 😛",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0019.jpg",
+      caption: "More native forest",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0020.jpg",
+      caption: "Ferns in an area where beech trees had died",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0021.jpg",
+      caption: "Love the Kiwi signage",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0022.jpg",
+      caption: "The crevasse!",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0023.jpg",
+      caption: "Looking upstream into a lost world 😛",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0024.jpg",
+      caption: "The bridge over the crevasse",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0025.jpg",
+      caption: "",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+    {
+      image: "./new-zealand-milford-sound-2009-0026.jpg",
+      caption: "Waterfall in the Sound",
+      alt: "",
+      likes: 0,
+      comments: [],
+    },
+  ]
 ---

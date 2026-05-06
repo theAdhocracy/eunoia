@@ -257,6 +257,7 @@ const pagination = {
 			min-inline-size: 80dvw;
 			padding: 0;
 			border: 4px solid var(--colour-border);
+			background-color: var(--colour-border);
 
 			&:focus,
 			&:focus-visible {
@@ -269,17 +270,17 @@ const pagination = {
 				nav,
 				aside {
 					grid-column: 2;
+					border-inline-start: 4px solid var(--colour-border);
 				}
 
-				nav {
+				& > nav[aria-label] {
 					grid-row: 1;
+					border-block-end: 0px;
 				}
 
 				& > img {
 					grid-column: 1;
 					grid-row: span 2;
-
-					border-inline-end: 4px solid var(--colour-border);
 				}
 
 				.comments ol {
@@ -292,6 +293,7 @@ const pagination = {
 				display: flex;
 				justify-content: space-between;
 				background-color: var(--colour-blue-darker);
+				border-block-end: 4px solid var(--colour-border);
 			}
 
 			button {
@@ -335,6 +337,7 @@ const pagination = {
 
 			aside {
 				padding: 1rem max(1rem, 4vw);
+				background-color: var(--colour-white);
 				border-block-start: 4px solid var(--colour-border);
 
 				header {

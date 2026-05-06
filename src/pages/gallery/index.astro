@@ -25,6 +25,11 @@ const albums = (await getCollection("albums")).sort(
 							images,
 						} = album.data;
 
+						// Skip blanks
+						if (!images || images.length === 0) {
+							return null;
+						}
+
 						// Format data
 						const filepath = album.id;
 						const slug = formatAlbumSlug(filepath);

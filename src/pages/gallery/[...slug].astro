@@ -111,7 +111,9 @@ const pagination = {
 							]);
 
 							// Normalise date
-							const dateTaken = formatDate(exifDate.DateTimeOriginal);
+							const dateTaken = formatDate(
+								exifDate?.DateTimeOriginal ?? datePub,
+							);
 
 							return (
 								<li>
